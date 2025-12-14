@@ -29,7 +29,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
 
   if (viewMode === "list") {
     return (
-      <div className="flex gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow">
+      <div className="flex gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow container mx-auto">
         <div className="relative w-32 h-32 shrink-0">
           <Image
             src={product.imageCover}
