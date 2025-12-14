@@ -62,7 +62,7 @@ export default function Products() {
 
       {/* Products Grid */}
       <div
-        className={`grid gap-6 ${
+        className={`grid gap-6 container mx-auto${
           viewMode === "grid"
             ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"
             : "grid-cols-1"
