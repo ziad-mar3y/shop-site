@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Layout/Navbar";
+import { Toaster } from 'react-hot-toast';
 import { Footer } from "@/components";
 
 
@@ -33,6 +34,7 @@ export default function RootLayout({
       >
         <Navbar/>
         {children}
+        <Toaster/>
         <Footer/>
       </body>
     </html>

@@ -5,12 +5,21 @@ import { SingleProductResponse } from "@/types";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Heart, RotateCcw, Shield, Truck } from "lucide-react";
+import {
+  Heart,
+  Loader2,
+  RotateCcw,
+  Shield,
+  ShoppingCart,
+  Truck,
+} from "lucide-react";
 import { renderStars } from "@/helpers/rating";
 import { formatPrice } from "@/helpers/currenct";
-import AddToCartButon from "@/components/product/AddToCartButoon";
+// import AddToCartButon from "@/components/product/AddToCartButoon";
 import Link from "next/link";
 import { apiServices } from "@/apiServices/apiServices";
+import toast from "react-hot-toast";
+import AddToCartButon from "@/components/product/AddToCartButoon";
 
 export default function productDetails() {
   const { id } = useParams();
@@ -28,9 +37,10 @@ export default function productDetails() {
         id ?? ""
       );
       setProduct(data.data);
-    }else{
+    } else {
       const data: SingleProductResponse = await apiServices.getProductDetails(
-        id[0])
+        id[0]
+      );
     }
     setIsLoading(false);
   }
@@ -38,9 +48,11 @@ export default function productDetails() {
     getProductDetails();
   }, []);
 
-  function handleAddToCart(id :string ,setAddToCartLoading : void) {
-    console.log(id , handleAddToCart);
-    
+  async function handleAddToCart() {
+    setAddToCartLoading(true);
+    const data = await apiServices.addProductToCart(product!._id);
+    toast.success(data.message);
+    setAddToCartLoading(false);
   }
 
   if (isLoading) {
@@ -180,18 +192,16 @@ export default function productDetails() {
           </div>
 
           {/* Action Buttons */}
-          {/* <div className="flex gap-4">
+          <div className="flex gap-4">
             <AddToCartButon
               addTocartLoading={addTocartLoading}
-              handleAddToCart={() =>
-                handleAddToCart(product._id , handleAddToCart)
-              }
+              handleAddToCart={handleAddToCart}
               productQuantity={product.quantity}
             />
             <Button variant="outline" size="lg">
               <Heart className="h-5 w-5" />
             </Button>
-          </div> */}
+          </div>
 
           {/* Features */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-6 border-t">

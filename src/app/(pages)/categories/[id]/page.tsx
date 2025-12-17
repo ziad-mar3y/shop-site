@@ -4,6 +4,7 @@ import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Calendar, Tag, Clock, Sparkles, Share2, Heart } from "lucide-react";
 import { Category } from "@/interfaces";
+import { apiServices } from "@/apiServices/apiServices";
 
 export default function CategoryCard() {
   const { id } = useParams();
@@ -12,31 +13,36 @@ export default function CategoryCard() {
   const [isFavorite, setIsFavorite] = useState(false);
 
   async function getSingleCategory() {
-    setLoading(true)
-    const data: SingleCategoryResponse = await fetch(
-      "https://ecommerce.routemisr.com/api/v1/categories/" + id
-    ).then((res) => res.json());
-    setCategory(data.data);
-    setLoading(false)
+    setLoading(true);
+    if (!(id instanceof Array)) {
+      const data: SingleCategoryResponse = await apiServices.getSingleCategory(
+        id ?? ""
+      );
+      setCategory(data.data);
+    }else{
+        const data: SingleCategoryResponse = await apiServices.getSingleCategory(
+        id[0])
+    }
+    setLoading(false);
   }
 
   useEffect(() => {
     getSingleCategory();
   }, []);
 
-    if (loading) {
-      return (
-        <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-          <div className="text-center space-y-4">
-            <div className="relative">
-              <div className="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
-              <Sparkles className="w-6 h-6 text-yellow-300 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
-            </div>
-            <p className="text-white text-lg font-semibold">Loading...</p>
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+        <div className="text-center space-y-4">
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin mx-auto"></div>
+            <Sparkles className="w-6 h-6 text-yellow-300 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-pulse" />
           </div>
+          <p className="text-white text-lg font-semibold">Loading...</p>
         </div>
-      );
-    }
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">

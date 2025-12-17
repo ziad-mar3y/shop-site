@@ -27,12 +27,11 @@ const CategoriesPage = () => {
 
   const fetchCategories = async () => {
     try {
-      setLoading(true)
-      const response: CategoryResponse = await apiServices.getAllCategories()
+      setLoading(true);
+      const response: CategoryResponse = await apiServices.getAllCategories();
       setCategories(response.data);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching categories:", error);
       setLoading(false);
     }
   };
@@ -57,7 +56,7 @@ const CategoriesPage = () => {
     return (
       <div className="min-h-screen gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center">
         <div className="text-center">
-          <LoadingSpinner/>
+          <LoadingSpinner />
         </div>
       </div>
     );
@@ -163,7 +162,7 @@ const CategoriesPage = () => {
             {categories.map((category, index) => (
               <div
                 key={category._id}
-                onMouseEnter={() => setHoveredId(null )}
+                onMouseEnter={() => setHoveredId(null)}
                 onMouseLeave={() => setHoveredId(null)}
                 className="group relative bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-2"
               >
@@ -187,7 +186,10 @@ const CategoriesPage = () => {
                   {/* Hover Overlay */}
                   <div className="absolute inset-0 gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <div className="absolute bottom-4 left-4 right-4">
-                      <Link href={`/categories/${category._id}`} className="w-full py-2 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2">
+                      <Link
+                        href={`/categories/${category._id}`}
+                        className="w-full py-2 bg-white text-gray-900 rounded-lg font-semibold hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"
+                      >
                         Explore Now
                         <ChevronRight className="w-4 h-4" />
                       </Link>
@@ -225,7 +227,9 @@ const CategoriesPage = () => {
               >
                 <div className="flex items-center p-6">
                   <div className="relative w-24 h-24 rounded-lg overflow-hidden shrink-0">
-                    <img
+                    <Image
+                      width={500}
+                      height={500}
                       src={category.image}
                       alt={category.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
@@ -249,6 +253,17 @@ const CategoriesPage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+        {categories.length === 0 && (
+          <div className="text-center py-16">
+            <div className="text-gray-400 text-6xl mb-4">🔍</div>
+            <h3 className="text-2xl font-bold text-gray-700 mb-2">
+              No brands found
+            </h3>
+            <p className="text-gray-500">
+              Try adjusting your search or filters
+            </p>
           </div>
         )}
       </div>

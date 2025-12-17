@@ -10,6 +10,9 @@ import { renderStars } from "@/helpers/rating";
 import { useContext, useState } from "react";
 import { formatPrice } from "@/helpers/currenct";
 import AddToCartButon from "./AddToCartButoon";
+import { apiServices } from "@/apiServices/apiServices";
+import toast from "react-hot-toast";
+// import AddToCartButon from "./AddToCartButoon";
 // import { cartContext } from "@/Context/CartContext";
 
 // using this interface here
@@ -21,16 +24,18 @@ interface ProductCardProps {
 export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [addTocartLoading, setAddToCartLoading] = useState<boolean>(false);
   // const { handleAddToCart } = useContext(cartContext);
-
- function handleAddToCart(){
-  const id = product._id
-
- }
+ async function handleAddToCart() {
+    setAddToCartLoading(true);
+    const data = await apiServices.addProductToCart(product!._id);
+    toast.success(data.message);
+    setAddToCartLoading(false);
+  }
+ 
 
   if (viewMode === "list") {
     return (
-      <div className="flex gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow container mx-auto">
-        <div className="relative w-32 h-32 shrink-0">
+      <div className="flex  gap-4 p-4 border rounded-lg hover:shadow-md transition-shadow container mx-auto">
+        <div className="relative w-32 h-32 shrink-0 ">
           <Image
             src={product.imageCover}
             alt={product.title}
@@ -40,7 +45,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
           />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0  ">
           <div className="flex justify-between items-start mb-2">
             <h3 className="font-semibold text-lg line-clamp-2">
               <Link
@@ -59,7 +64,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             {product.description}
           </p>
 
-          <div className="flex items-center gap-4 mb-3 xs:flex-col">
+          <div className="flex items-start gap-4 mb-3 xs:flex-col">
             <div className="flex items-center gap-1">
               {renderStars(product.ratingsAverage)}
               <span className="text-sm text-muted-foreground ml-1">
@@ -72,9 +77,9 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </span>
           </div>
 
-          <div className="flex items-center justify-between xs:flex-col">
+          <div className="flex items-start justify-between xs:flex-col">
             <div className="flex flex-col gap-1">
-              <span className="text-2xl font-bold text-primary">
+              <span className="text-2xl font-bold text-primary  ">
                 {formatPrice(product.price)}
               </span>
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -99,7 +104,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               </div>
             </div>
 
-            <Button>
+            <Button className="mt-3">
               <ShoppingCart className="h-4 w-4 mr-2" />
               Add to Cart
             </Button>
@@ -188,7 +193,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
       <div className="p-4">
         <AddToCartButon
           addTocartLoading={addTocartLoading}
-          // handleAddToCart={()=>handleAddToCart!(product._id ,setAddToCartLoading)}
+          handleAddToCart={handleAddToCart}
           productQuantity={product.quantity}
         />
       </div>
