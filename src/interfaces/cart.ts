@@ -16,7 +16,7 @@ export interface getCartResponse {
   data: CartResponseData<Product2>
 }
 
- interface CartResponseData<T> {
+ export interface CartResponseData<T> {
   _id: string
   cartOwner: string
   products: CartProduct<T>[]
@@ -26,7 +26,7 @@ export interface getCartResponse {
   totalCartPrice: number
 }
 
- interface CartProduct<T> {
+ export interface CartProduct<T> {
   count: number
   _id: string
   product: T
