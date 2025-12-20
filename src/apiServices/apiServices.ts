@@ -1,4 +1,4 @@
-import { addToCartResponse, getCartResponse } from "@/interfaces";
+import { addToCartResponse, getCartResponse, RemoveProductCart } from "@/interfaces";
 import {
   BrandResponse,
   CategoryResponse,
@@ -18,39 +18,42 @@ class ApiServices {
   baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
   async getAllProducts(): Promise<ProductResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/products/").then((res) =>
-      res.json()
-    );
+    return await fetch("https://ecommerce.routemisr.com/api/v1/products/", {
+      next: {
+        revalidate: 5,
+      },
+      cache: "force-cache",
+    }).then((res) => res.json());
   }
 
   async getProductDetails(id: string): Promise<SingleProductResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/products/" + id).then((res) =>
-      res.json()
-    );
+    return await fetch(
+      "https://ecommerce.routemisr.com/api/v1/products/" + id
+    ).then((res) => res.json());
   }
 
   async getAllCategories(): Promise<CategoryResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/categories").then((res) =>
-      res.json()
-    );
+    return await fetch(
+      "https://ecommerce.routemisr.com/api/v1/categories"
+    ).then((res) => res.json());
   }
 
   async getSingleCategory(id: string): Promise<SingleCategoryResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/categories/" + id).then((res) =>
-      res.json()
-    );
+    return await fetch(
+      "https://ecommerce.routemisr.com/api/v1/categories/" + id
+    ).then((res) => res.json());
   }
 
   async getAllBrands(): Promise<BrandResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/brands").then((res) =>
-      res.json()
+    return await fetch("https://ecommerce.routemisr.com/api/v1/brands").then(
+      (res) => res.json()
     );
   }
 
   async getSingleBrand(id: string): Promise<SingleBrandResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/brands/" + id).then((res) =>
-      res.json()
-    );
+    return await fetch(
+      "https://ecommerce.routemisr.com/api/v1/brands/" + id
+    ).then((res) => res.json());
   }
 
   handlHeadrs() {
@@ -72,11 +75,19 @@ class ApiServices {
   }
 
   async getUserCart(): Promise<getCartResponse> {
-    return fetch("https://ecommerce.routemisr.com/api/v1/cart",{
-      headers: this.handlHeadrs()
-    }).then((res) =>
-      res.json()
-    );
+    return fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+      headers: this.handlHeadrs(),
+    }).then((res) => res.json());
+  }
+
+  async removeSingleProduct(productId: string): Promise<RemoveProductCart> {
+    return await fetch(
+      "https://ecommerce.routemisr.com/api/v1/cart/" + productId,
+      {
+        method: "delete",
+        headers: this.handlHeadrs(),
+      }
+    ).then((res) => res.json());
   }
 }
 

@@ -44,3 +44,61 @@ export interface Product2 {
   ratingsAverage: number
   id: string
 }
+
+
+export interface RemoveProductCart {
+  status: string
+  numOfCartItems: number
+  cartId: string
+  data: Data
+}
+
+export interface Data {
+  _id: string
+  cartOwner: string
+  products: Product[]
+  createdAt: string
+  updatedAt: string
+  __v: number
+  totalCartPrice: number
+}
+
+export interface Product {
+  count: number
+  _id: string
+  product: Product3
+  price: number
+}
+
+export interface Product3 {
+  subcategory: Subcategory3[]
+  _id: string
+  title: string
+  quantity: number
+  imageCover: string
+  category: Category
+  brand: Brand
+  ratingsAverage: number
+  id: string
+}
+
+export interface Subcategory3 {
+  _id: string
+  name: string
+  slug: string
+  category: string
+}
+
+export interface Category3 {
+  _id: string
+  name: string
+  slug: string
+  image: string
+}
+
+export interface Brand3 {
+  _id: string
+  name: string
+  slug: string
+  image: string
+}
