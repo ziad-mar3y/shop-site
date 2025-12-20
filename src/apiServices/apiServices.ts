@@ -12,10 +12,10 @@ import { json } from "stream/consumers";
 // token =
 //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY1ODIzMzA2LCJleHAiOjE3NzM1OTkzMDZ9.pe0ULr-nVg5GRyFGa5qhsXHQpBniTiYKnl1LfYXGnLk";
 
-const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+// const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 class ApiServices {
-  baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL!;
+  // baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
   async getAllProducts(): Promise<ProductResponse> {
     return await fetch("https://ecommerce.routemisr.com/api/v1/products/", {
