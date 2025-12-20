@@ -56,14 +56,14 @@ export interface RemoveProductCart {
 export interface Data {
   _id: string
   cartOwner: string
-  products: Product[]
+  products: ProductCart[]
   createdAt: string
   updatedAt: string
   __v: number
   totalCartPrice: number
 }
 
-export interface Product {
+export interface ProductCart {
   count: number
   _id: string
   product: Product3
