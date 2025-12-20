@@ -90,7 +90,7 @@ export default function InnerCart({ cartData }: innerCartProps) {
               </div>
 
               <Button
-                // disabled={cartItems.length === 0}
+                disabled={innerCartData.data.products.length === 0}
                 className="w-full  bg-slate-800 mb-3   text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
                 Proceed to Checkout
@@ -98,7 +98,7 @@ export default function InnerCart({ cartData }: innerCartProps) {
               </Button>
               <Link href={"/products"} className="mt-4">
                 <Button
-                  // disabled={cartItems.length === 0}
+                  disabled={innerCartData.data.products.length === 0}
                   className="w-full  bg-slate-800 text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                 >
                   Continue Shopping
