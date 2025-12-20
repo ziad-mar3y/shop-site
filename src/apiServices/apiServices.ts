@@ -18,37 +18,37 @@ class ApiServices {
   baseUrl: string = process.env.NEXT_PUBLIC_API_BASE_URL!;
 
   async getAllProducts(): Promise<ProductResponse> {
-    return await fetch(this.baseUrl + "api/v1/products/").then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/products/").then((res) =>
       res.json()
     );
   }
 
   async getProductDetails(id: string): Promise<SingleProductResponse> {
-    return await fetch(this.baseUrl + "api/v1/products/" + id).then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/products/" + id).then((res) =>
       res.json()
     );
   }
 
   async getAllCategories(): Promise<CategoryResponse> {
-    return await fetch(this.baseUrl + "api/v1/categories").then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/categories").then((res) =>
       res.json()
     );
   }
 
   async getSingleCategory(id: string): Promise<SingleCategoryResponse> {
-    return await fetch(this.baseUrl + "api/v1/categories/" + id).then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/categories/" + id).then((res) =>
       res.json()
     );
   }
 
   async getAllBrands(): Promise<BrandResponse> {
-    return await fetch(this.baseUrl + "api/v1/brands").then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/brands").then((res) =>
       res.json()
     );
   }
 
   async getSingleBrand(id: string): Promise<SingleBrandResponse> {
-    return await fetch(this.baseUrl + "api/v1/brands/" + id).then((res) =>
+    return await fetch("https://ecommerce.routemisr.com/api/v1/brands/" + id).then((res) =>
       res.json()
     );
   }
@@ -62,7 +62,7 @@ class ApiServices {
   }
 
   async addProductToCart(productId: string): Promise<addToCartResponse> {
-    return fetch(this.baseUrl + "api/v1/cart", {
+    return fetch("https://ecommerce.routemisr.com/api/v1/cart", {
       method: "post",
       body: JSON.stringify({
         productId,
@@ -72,7 +72,7 @@ class ApiServices {
   }
 
   async getUserCart(): Promise<getCartResponse> {
-    return fetch(this.baseUrl + "api/v1/cart",{
+    return fetch("https://ecommerce.routemisr.com/api/v1/cart",{
       headers: this.handlHeadrs()
     }).then((res) =>
       res.json()
