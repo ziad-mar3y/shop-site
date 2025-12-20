@@ -13,7 +13,7 @@ export default function AddToCartButon({
   handleAddToCart,
 }: AddToCartButonProps) {
   return (
-    <Button
+    <div><Button
       size="lg"
       className="flex-1 w-full"
       disabled={productQuantity === 0 || addTocartLoading}
@@ -22,7 +22,7 @@ export default function AddToCartButon({
       {addTocartLoading && <Loader2 className="animate-spin" />}
       <ShoppingCart className="h-5 w-5 mr-2" />
       Add to Cart
-    </Button>
+    </Button></div>
   );
 }
 

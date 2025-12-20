@@ -10,9 +10,10 @@ import toast from "react-hot-toast";
 
 interface innerCartProps {
   cartData: getCartResponse;
+  key : string
 }
 
-export default function InnerCart({ cartData }: innerCartProps) {
+export default function InnerCart({ cartData, key }: innerCartProps) {
   const [innerCartData, setInnerCartData] = useState<getCartResponse>(cartData);
 
   async function handleRemoveItem(

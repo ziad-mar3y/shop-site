@@ -10,7 +10,6 @@ export default async function ShopingCart() {
 
   const response = await fetchCart();
 
-  // response.data.products[0].product.
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 py-8 px-4">
