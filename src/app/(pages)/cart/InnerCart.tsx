@@ -60,7 +60,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
             </Button>}
           </div>
 
-          <div className="lg:col-span-1">
+          <div className="lg:col-span-1  xs:w-xs">
             <div className="bg-white rounded-2xl shadow-sm p-6 sticky top-8">
               <h2 className="text-xl font-bold text-slate-800 mb-6">
                 Order Summary
@@ -99,7 +99,6 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
               </Button>
               <Link href={"/products"} className="mt-4">
                 <Button
-                  disabled={innerCartData.data.products.length === 0}
                   className="w-full  bg-slate-800 text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
                 >
                   Continue Shopping

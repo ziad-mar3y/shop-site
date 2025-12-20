@@ -183,9 +183,7 @@ export default function Navbar() {
                 <ShoppingCart className="w-5 h-5" />
              
               Cart
-              <span className="bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span>
+              
             </Link >
           </div>
         </div>

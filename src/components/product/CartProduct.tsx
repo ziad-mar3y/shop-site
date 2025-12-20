@@ -24,7 +24,7 @@ export default function CartProduct({
   return (
     <div
       key={item._id}
-      className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300"
+      className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow duration-300 "
     >
       <div className="flex gap-6">
         <div className="w-24 h-24 rounded-xl overflow-hidden bg-slate-100 shrink-0">
@@ -37,7 +37,7 @@ export default function CartProduct({
           />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 ">
           <div className="flex justify-between items-start mb-2">
             <div>
               <Link href={`/products/${item.product._id}`}>
@@ -65,7 +65,7 @@ export default function CartProduct({
             </Button>
           </div>
 
-          <div className="flex justify-between items-center mt-4">
+          <div className="flex justify-between items-center mt-4 flex-wrap">
             <div className="flex items-center gap-3 bg-slate-100 rounded-lg p-1">
               <Button
                 // onClick={() => updateQuantity(item.id, -1)}
@@ -86,7 +86,7 @@ export default function CartProduct({
               </button>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-slate-800">
+              <div className="text-xl font-bold text-slate-800" >
                 {formatPrice(item.price)}
               </div>
             </div>
