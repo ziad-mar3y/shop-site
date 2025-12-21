@@ -1,6 +1,6 @@
 "use client";
 import { getCartResponse } from "@/interfaces";
-import { ArrowRight, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, ShoppingBag, Trash2 } from "lucide-react";
 import CartProduct from "../../../components/product/CartProduct";
 import { Button } from "../../../components/ui";
 import Link from "next/link";
@@ -10,11 +10,18 @@ import toast from "react-hot-toast";
 
 interface innerCartProps {
   cartData: getCartResponse;
-  key : string
+  key: string;
 }
 
 export default function InnerCart({ cartData, key }: innerCartProps) {
   const [innerCartData, setInnerCartData] = useState<getCartResponse>(cartData);
+  const [isCartRemoed, setIsCartRemoed] = useState(false);
+
+
+  async function updateCart() {
+    const newCartData = await apiServices.getUserCart();
+    setInnerCartData(newCartData);
+  }
 
   async function handleRemoveItem(
     productId: string,
@@ -24,9 +31,22 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     const response = await apiServices.removeSingleProduct(productId);
     toast.success("product removed successfully");
     setIsProductRemoving(false);
-    const newCartData = await apiServices.getUserCart();
-    setInnerCartData(newCartData);
+    updateCart();
   }
+
+  async function clearUserCart() {
+    setIsCartRemoed(true);
+    const response = await apiServices.clearCart();
+    toast.success("Cart Removed successfully");
+    updateCart();
+    setIsCartRemoed(false);
+  }
+
+  async function handleUpdateProductCart(productId: string, count: number) {
+    const response = await apiServices.updateCartProductCount(productId, count);
+    updateCart();
+  }
+
   return (
     <>
       <div className="max-w-6xl mx-auto">
@@ -51,13 +71,23 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
               </div>
             ) : (
               innerCartData.data.products.map((item) => (
-                <CartProduct item={item} handleRemoveItem={handleRemoveItem} />
+                <CartProduct
+                  item={item}
+                  handleRemoveItem={handleRemoveItem}
+                  handleUpdateProductCart={handleUpdateProductCart}
+                />
               ))
             )}
-          {innerCartData.data.products.length > 0 &&  <Button>
-              <Trash2 />
-              Clear Cart
-            </Button>}
+            {innerCartData.data.products.length > 0 && (
+              <Button disabled={isCartRemoed} onClick={clearUserCart}>
+                Clear Cart
+                {isCartRemoed ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  <Trash2 />
+                )}
+              </Button>
+            )}
           </div>
 
           <div className="lg:col-span-1  xs:w-xs">
@@ -98,9 +128,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Link href={"/products"} className="mt-4">
-                <Button
-                  className="w-full  bg-slate-800 text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
-                >
+                <Button className="w-full  bg-slate-800 text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group">
                   Continue Shopping
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Button>

@@ -1,4 +1,8 @@
-import { addToCartResponse, getCartResponse, RemoveProductCart } from "@/interfaces";
+import {
+  addToCartResponse,
+  getCartResponse,
+  RemoveProductCart,
+} from "@/interfaces";
 import {
   BrandResponse,
   CategoryResponse,
@@ -60,7 +64,7 @@ class ApiServices {
     return {
       "Content-Type": "application/json",
       token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY2MjcxMzQ5LCJleHAiOjE3NzQwNDczNDl9.jVfsG4sShiAs9WD2TbC3QEf6TmXKXdboRRmAzuXoxvg",
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY2MzQ2MzczLCJleHAiOjE3NzQxMjIzNzN9.RAUtueSCBQ-L2GTg6GBNbfsBAHg31pTikKxQ-NTt1X8",
     };
   }
 
@@ -88,6 +92,23 @@ class ApiServices {
         headers: this.handlHeadrs(),
       }
     ).then((res) => res.json());
+  }
+
+  async clearCart(): Promise<RemoveProductCart> {
+    return await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+      method: "delete",
+      headers: this.handlHeadrs(),
+    }).then((res) => res.json());
+  }
+
+  async updateCartProductCount(productId: string, count: number): Promise<any> {
+    return await fetch("https://ecommerce.routemisr.com/api/v1/cart/" + productId, {
+      method: "put",
+      body: JSON.stringify({
+        count,
+      }),
+      headers: this.handlHeadrs(),
+    }).then((res) => res.json());
   }
 }
 

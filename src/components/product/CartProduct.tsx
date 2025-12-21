@@ -13,13 +13,26 @@ interface cartProductProps {
     productId: string,
     setIsProductRemoving: (value: boolean) => void
   ) => void;
+  handleUpdateProductCart: (productId: string, count: number) => Promise<void>;
 }
 
 export default function CartProduct({
   item,
   handleRemoveItem,
+  handleUpdateProductCart,
 }: cartProductProps) {
   const [isProductRemoving, setIsProductRemoving] = useState(false);
+  const [productCount, setProductCount] = useState(item.count);
+  const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout >()
+
+  async function handleUpdatingCount(count: number) {
+    setProductCount(count);
+    clearTimeout(timeOutId)
+   const id = setTimeout(() => {
+      handleUpdateProductCart(item.product._id, count);
+    }, 800);
+    setTimeOutId(id)
+  }
 
   return (
     <div
@@ -68,25 +81,27 @@ export default function CartProduct({
           <div className="flex justify-between items-center mt-4 flex-wrap">
             <div className="flex items-center gap-3 bg-slate-100 rounded-lg p-1">
               <Button
-                // onClick={() => updateQuantity(item.id, -1)}
-                className="p-2 hover:bg-white rounded-md transition-colors bg-transparent"
+                disabled={item.count == 1}
+                onClick={() => handleUpdatingCount(productCount - 1)}
+                className="p-2 hover:bg-white rounded-md transition-colors bg-white"
                 aria-label="Decrease quantity"
               >
-                <Minus className="w-4 h-4 text-slate-600" />
+                <Minus className="w-4 h-4 text-slate-600 " />
               </Button>
               <span className="w-8 text-center font-semibold text-slate-800">
-                {item.count}
+                {productCount}
               </span>
-              <button
-                // onClick={() => updateQuantity(item.id, 1)}
-                className="p-2 hover:bg-white rounded-md transition-colors"
+              <Button
+                disabled={item.count === item.product.quantity}
+                onClick={() => handleUpdatingCount(productCount + 1)}
+                className="p-2 hover:bg-white rounded-md transition-colors bg-white"
                 aria-label="Increase quantity"
               >
-                <Plus className="w-4 h-4 text-slate-600" />
-              </button>
+                <Plus className="w-4 h-4 text-slate-600 " />
+              </Button>
             </div>
             <div className="text-right">
-              <div className="text-xl font-bold text-slate-800" >
+              <div className="text-xl font-bold text-slate-800">
                 {formatPrice(item.price)}
               </div>
             </div>
