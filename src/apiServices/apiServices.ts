@@ -32,31 +32,31 @@ class ApiServices {
 
   async getProductDetails(id: string): Promise<SingleProductResponse> {
     return await fetch(
-      "https://ecommerce.routemisr.com/api/v1/products/" + id
+      this.baseUrl + "api/v1/products/" + id
     ).then((res) => res.json());
   }
 
   async getAllCategories(): Promise<CategoryResponse> {
     return await fetch(
-      "https://ecommerce.routemisr.com/api/v1/categories"
+      this.baseUrl + "api/v1/categories"
     ).then((res) => res.json());
   }
 
   async getSingleCategory(id: string): Promise<SingleCategoryResponse> {
     return await fetch(
-      "https://ecommerce.routemisr.com/api/v1/categories/" + id
+      this.baseUrl + "api/v1/categories/" + id
     ).then((res) => res.json());
   }
 
   async getAllBrands(): Promise<BrandResponse> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/brands").then(
+    return await fetch(this.baseUrl + "api/v1/brands").then(
       (res) => res.json()
     );
   }
 
   async getSingleBrand(id: string): Promise<SingleBrandResponse> {
     return await fetch(
-      "https://ecommerce.routemisr.com/api/v1/brands/" + id
+      this.baseUrl + "api/v1/brands/" + id
     ).then((res) => res.json());
   }
 
@@ -69,7 +69,7 @@ class ApiServices {
   }
 
   async addProductToCart(productId: string): Promise<addToCartResponse> {
-    return fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+    return fetch(this.baseUrl + "api/v1/cart", {
       method: "post",
       body: JSON.stringify({
         productId,
@@ -79,14 +79,14 @@ class ApiServices {
   }
 
   async getUserCart(): Promise<getCartResponse> {
-    return fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+    return fetch(this.baseUrl + "api/v1/cart", {
       headers: this.handlHeadrs(),
     }).then((res) => res.json());
   }
 
   async removeSingleProduct(productId: string): Promise<RemoveProductCart> {
     return await fetch(
-      "https://ecommerce.routemisr.com/api/v1/cart/" + productId,
+      this.baseUrl + "api/v1/cart/" + productId,
       {
         method: "delete",
         headers: this.handlHeadrs(),
@@ -95,14 +95,14 @@ class ApiServices {
   }
 
   async clearCart(): Promise<RemoveProductCart> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/cart", {
+    return await fetch(this.baseUrl + "api/v1/cart", {
       method: "delete",
       headers: this.handlHeadrs(),
     }).then((res) => res.json());
   }
 
   async updateCartProductCount(productId: string, count: number): Promise<any> {
-    return await fetch("https://ecommerce.routemisr.com/api/v1/cart/" + productId, {
+    return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
       body: JSON.stringify({
         count,
