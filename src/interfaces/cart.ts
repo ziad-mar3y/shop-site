@@ -15,6 +15,13 @@ export interface getCartResponse {
   cartId: string
   data: CartResponseData<Product2>
 }
+export interface handleCartCount {
+  status: string
+  message: string
+  numOfCartItems: number
+  cartId: string
+  data: CartResponseData<Product2>
+}
 
  export interface CartResponseData<T> {
   _id: string

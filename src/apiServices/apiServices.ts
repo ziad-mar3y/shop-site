@@ -1,6 +1,7 @@
 import {
   addToCartResponse,
   getCartResponse,
+  handleCartCount,
   RemoveProductCart,
 } from "@/interfaces";
 import {
@@ -11,7 +12,6 @@ import {
   SingleCategoryResponse,
   SingleProductResponse,
 } from "@/types";
-import { json } from "stream/consumers";
 
 // token =
 //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY1ODIzMzA2LCJleHAiOjE3NzM1OTkzMDZ9.pe0ULr-nVg5GRyFGa5qhsXHQpBniTiYKnl1LfYXGnLk";
@@ -101,7 +101,7 @@ class ApiServices {
     }).then((res) => res.json());
   }
 
-  async updateCartProductCount(productId: string, count: number): Promise<any> {
+  async updateCartProductCount(productId: string, count: number): Promise<handleCartCount> {
     return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
       body: JSON.stringify({

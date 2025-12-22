@@ -12,6 +12,7 @@ import { formatPrice } from "@/helpers/currenct";
 import AddToCartButon from "./AddToCartButoon";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
+import { cartContext } from "@/Contexts/cartContext";
 // import AddToCartButon from "./AddToCartButoon";
 // import { cartContext } from "@/Context/CartContext";
 
@@ -23,14 +24,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [addTocartLoading, setAddToCartLoading] = useState<boolean>(false);
-  // const { handleAddToCart } = useContext(cartContext);
- async function handleAddToCart() {
-    setAddToCartLoading(true);
-    const data = await apiServices.addProductToCart(product!._id);
-    toast.success(data.message);
-    setAddToCartLoading(false);
-  }
- 
+  const {  handleAddToCart  } = useContext(cartContext);
+
+
+
 
   if (viewMode === "list") {
     return (
@@ -104,11 +101,11 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               </div>
             </div>
 
-             <AddToCartButon
-          addTocartLoading={addTocartLoading}
-          handleAddToCart={handleAddToCart}
-          productQuantity={product.quantity}
-        />
+            <AddToCartButon
+              addTocartLoading={addTocartLoading}
+              handleAddToCart={()=>handleAddToCart(product._id , setAddToCartLoading)}
+              productQuantity={product.quantity}
+            />
           </div>
         </div>
       </div>
@@ -194,7 +191,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
       <div className="p-4">
         <AddToCartButon
           addTocartLoading={addTocartLoading}
-          handleAddToCart={handleAddToCart}
+          handleAddToCart={()=>handleAddToCart(product._id, setAddToCartLoading)}
           productQuantity={product.quantity}
         />
       </div>

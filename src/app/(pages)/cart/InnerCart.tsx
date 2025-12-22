@@ -4,9 +4,10 @@ import { ArrowRight, Loader2, ShoppingBag, Trash2 } from "lucide-react";
 import CartProduct from "../../../components/product/CartProduct";
 import { Button } from "../../../components/ui";
 import Link from "next/link";
-import { useState } from "react";
+import {  useContext, useEffect, useState } from "react";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
+import { cartContext } from "@/Contexts/cartContext";
 
 interface innerCartProps {
   cartData: getCartResponse;
@@ -42,10 +43,12 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     setIsCartRemoed(false);
   }
 
-  async function handleUpdateProductCart(productId: string, count: number) {
-    const response = await apiServices.updateCartProductCount(productId, count);
-    updateCart();
-  }
+
+  const { setCartCount ,handleUpdateProductCart } = useContext(cartContext)
+
+  useEffect(()=>{
+    setCartCount(innerCartData.numOfCartItems)
+  }, [innerCartData])
 
   return (
     <>
@@ -74,7 +77,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                 <CartProduct
                   item={item}
                   handleRemoveItem={handleRemoveItem}
-                  handleUpdateProductCart={handleUpdateProductCart}
+                  handleUpdateProductCart={()=>handleUpdateProductCart(item.product._id , item.count , updateCart)}
                 />
               ))
             )}

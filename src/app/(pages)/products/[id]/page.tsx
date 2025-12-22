@@ -3,7 +3,7 @@ import { Button, LoadingSpinner } from "@/components";
 import { Product } from "@/interfaces";
 import { SingleProductResponse } from "@/types";
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Heart,
@@ -20,6 +20,7 @@ import Link from "next/link";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import AddToCartButon from "@/components/product/AddToCartButoon";
+import { cartContext } from "@/Contexts/cartContext";
 
 export default function productDetails() {
   const { id } = useParams();
@@ -29,6 +30,7 @@ export default function productDetails() {
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(-1);
   const [addTocartLoading, setAddToCartLoading] = useState(false);
+  const { setCartCount , handleAddToCart} = useContext(cartContext);
 
   async function getProductDetails() {
     setIsLoading(true);
@@ -48,12 +50,7 @@ export default function productDetails() {
     getProductDetails();
   }, []);
 
-  async function handleAddToCart() {
-    setAddToCartLoading(true);
-    const data = await apiServices.addProductToCart(product!._id);
-    toast.success(data.message);
-    setAddToCartLoading(false);
-  }
+ 
 
   if (isLoading) {
     return (
@@ -195,7 +192,7 @@ export default function productDetails() {
           <div className="flex gap-4">
             <AddToCartButon
               addTocartLoading={addTocartLoading}
-              handleAddToCart={handleAddToCart}
+              handleAddToCart={()=>handleAddToCart(product._id, setAddToCartLoading)}
               productQuantity={product.quantity}
             />
             <Button variant="outline" size="lg">

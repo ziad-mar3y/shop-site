@@ -1,6 +1,6 @@
 "use client";
-import React, { useState } from "react";
-import { Search, ShoppingCart, User, Menu, X, ChevronDown } from "lucide-react";
+import React, { useContext, useState } from "react";
+import { Search, ShoppingCart, User, Menu, X, ChevronDown, Loader2 } from "lucide-react";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -10,6 +10,7 @@ import {
 } from "@radix-ui/react-navigation-menu";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { cartContext } from "@/Contexts/cartContext";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -24,6 +25,11 @@ export default function Navbar() {
     { href: "/categories", label: "Categories" },
     { href: "/brands", label: "Brands" },
   ];
+
+
+    const { cartCount , isLoading } = useContext(cartContext)
+  
+
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 w-full">
@@ -116,9 +122,9 @@ export default function Navbar() {
             </button>
             <Link href={"/cart"} className="text-gray-700 hover:text-blue-600 relative">
               <ShoppingCart className="w-6 h-6" />
-              {/* <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                3
-              </span> */}
+              <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                { isLoading ? <Loader2 className="animate-spin"/> : cartCount}
+              </span>
             </Link>
           </div>
 
