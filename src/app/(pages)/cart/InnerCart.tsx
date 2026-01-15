@@ -1,10 +1,10 @@
 "use client";
-import { getCartResponse } from "@/interfaces";
+import { checkOut, getCartResponse } from "@/interfaces";
 import { ArrowRight, Loader2, ShoppingBag, Trash2 } from "lucide-react";
 import CartProduct from "../../../components/product/CartProduct";
 import { Button } from "../../../components/ui";
 import Link from "next/link";
-import {  useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
@@ -17,7 +17,7 @@ interface innerCartProps {
 export default function InnerCart({ cartData, key }: innerCartProps) {
   const [innerCartData, setInnerCartData] = useState<getCartResponse>(cartData);
   const [isCartRemoed, setIsCartRemoed] = useState(false);
-
+  const [checkOutLoading, setCheckOutLoading] = useState(false);
 
   async function updateCart() {
     const newCartData = await apiServices.getUserCart();
@@ -43,12 +43,19 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     setIsCartRemoed(false);
   }
 
+  async function handleCheckOut() {
+    setCheckOutLoading(true);
+    const response: checkOut = await apiServices.checkOut(cartData.cartId);
+    setCheckOutLoading(false);
+    console.log(response);
+    location.href = response.session.url;
+  }
 
-  const { setCartCount ,handleUpdateProductCart } = useContext(cartContext)
+  const { setCartCount, handleUpdateProductCart } = useContext(cartContext);
 
-  useEffect(()=>{
-    setCartCount(innerCartData.numOfCartItems)
-  }, [innerCartData])
+  useEffect(() => {
+    setCartCount(innerCartData.numOfCartItems);
+  }, [innerCartData]);
 
   return (
     <>
@@ -77,7 +84,13 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                 <CartProduct
                   item={item}
                   handleRemoveItem={handleRemoveItem}
-                  handleUpdateProductCart={()=>handleUpdateProductCart(item.product._id , item.count , updateCart)}
+                  handleUpdateProductCart={() =>
+                    handleUpdateProductCart(
+                      item.product._id,
+                      item.count,
+                      updateCart
+                    )
+                  }
                 />
               ))
             )}
@@ -103,7 +116,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                 <div className="flex justify-between text-slate-600">
                   <span>Subtotal</span>
                   <span className="font-semibold">
-                    ${innerCartData.data.totalCartPrice.toFixed(2)}
+                    EGP {innerCartData.data.totalCartPrice.toFixed(2)}
                   </span>
                 </div>
                 <div className="flex justify-between text-slate-600">
@@ -117,17 +130,21 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                       Total
                     </span>
                     <span className="text-2xl font-bold text-slate-800">
-                      ${innerCartData.data.totalCartPrice.toFixed(2)}
+                      EGP{innerCartData.data.totalCartPrice}
                     </span>
                   </div>
                 </div>
               </div>
 
               <Button
-                disabled={innerCartData.data.products.length === 0}
+                onClick={handleCheckOut}
+                disabled={
+                  innerCartData.data.products.length === 0 || checkOutLoading
+                }
                 className="w-full  bg-slate-800 mb-3   text-white py-6 rounded-xl font-semibold hover:bg-slate-700 transition-colors disabled:bg-slate-300 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
-                Proceed to Checkout
+                Proceed to Checkout{" "}
+                {checkOutLoading && <Loader2 className=" animate-spin" />}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Button>
               <Link href={"/products"} className="mt-4">

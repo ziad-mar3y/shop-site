@@ -31,33 +31,33 @@ class ApiServices {
   }
 
   async getProductDetails(id: string): Promise<SingleProductResponse> {
-    return await fetch(
-      this.baseUrl + "api/v1/products/" + id
-    ).then((res) => res.json());
+    return await fetch(this.baseUrl + "api/v1/products/" + id).then((res) =>
+      res.json()
+    );
   }
 
   async getAllCategories(): Promise<CategoryResponse> {
-    return await fetch(
-      this.baseUrl + "api/v1/categories"
-    ).then((res) => res.json());
+    return await fetch(this.baseUrl + "api/v1/categories").then((res) =>
+      res.json()
+    );
   }
 
   async getSingleCategory(id: string): Promise<SingleCategoryResponse> {
-    return await fetch(
-      this.baseUrl + "api/v1/categories/" + id
-    ).then((res) => res.json());
+    return await fetch(this.baseUrl + "api/v1/categories/" + id).then((res) =>
+      res.json()
+    );
   }
 
   async getAllBrands(): Promise<BrandResponse> {
-    return await fetch(this.baseUrl + "api/v1/brands").then(
-      (res) => res.json()
+    return await fetch(this.baseUrl + "api/v1/brands").then((res) =>
+      res.json()
     );
   }
 
   async getSingleBrand(id: string): Promise<SingleBrandResponse> {
-    return await fetch(
-      this.baseUrl + "api/v1/brands/" + id
-    ).then((res) => res.json());
+    return await fetch(this.baseUrl + "api/v1/brands/" + id).then((res) =>
+      res.json()
+    );
   }
 
   handlHeadrs() {
@@ -85,13 +85,10 @@ class ApiServices {
   }
 
   async removeSingleProduct(productId: string): Promise<RemoveProductCart> {
-    return await fetch(
-      this.baseUrl + "api/v1/cart/" + productId,
-      {
-        method: "delete",
-        headers: this.handlHeadrs(),
-      }
-    ).then((res) => res.json());
+    return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
+      method: "delete",
+      headers: this.handlHeadrs(),
+    }).then((res) => res.json());
   }
 
   async clearCart(): Promise<RemoveProductCart> {
@@ -101,7 +98,10 @@ class ApiServices {
     }).then((res) => res.json());
   }
 
-  async updateCartProductCount(productId: string, count: number): Promise<handleCartCount> {
+  async updateCartProductCount(
+    productId: string,
+    count: number
+  ): Promise<handleCartCount> {
     return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
       body: JSON.stringify({
@@ -109,6 +109,26 @@ class ApiServices {
       }),
       headers: this.handlHeadrs(),
     }).then((res) => res.json());
+  }
+
+  async checkOut(cartId: string) {
+    return fetch(
+      this.baseUrl +
+        "api/v1/orders/checkout-session/" +
+        cartId +
+        "?url=http://localhost:3000",
+      {
+        body: JSON.stringify({
+          shippingAddress: {
+            details: "details",
+            phone: "01010700999",
+            city: "Cairo",
+          },
+        }),
+        headers: this.handlHeadrs(),
+        method: "post",
+      }
+    ).then((res) => res.json());
   }
 }
 

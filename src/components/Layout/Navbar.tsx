@@ -1,6 +1,14 @@
 "use client";
 import React, { useContext, useState } from "react";
-import { Search, ShoppingCart, User, Menu, X, ChevronDown, Loader2 } from "lucide-react";
+import {
+  Search,
+  ShoppingCart,
+  User,
+  Menu,
+  X,
+  ChevronDown,
+  Loader2,
+} from "lucide-react";
 import Link from "next/link";
 import {
   NavigationMenu,
@@ -11,6 +19,8 @@ import {
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { cartContext } from "@/Contexts/cartContext";
+import { useSelector } from "react-redux";
+import { RootState } from "@/redux/store";
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -20,16 +30,17 @@ export default function Navbar() {
 
   const pathName = usePathname();
 
+
+// const {count} = useSelector((state:RootState )=> state.counter)
+  
+
   const navItem = [
     { href: "/products", label: "Products" },
     { href: "/categories", label: "Categories" },
     { href: "/brands", label: "Brands" },
   ];
 
-
-    const { cartCount , isLoading } = useContext(cartContext)
-  
-
+  const { cartCount, isLoading } = useContext(cartContext);
 
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50 w-full">
@@ -54,7 +65,7 @@ export default function Navbar() {
           {/* Logo */}
           <div className="shrink-0">
             <Link href="/" className="text-2xl font-bold text-black">
-              Shop
+              Shop 
             </Link>
           </div>
 
@@ -120,10 +131,13 @@ export default function Navbar() {
             <button className="text-gray-700 hover:text-blue-600">
               <User className="w-6 h-6" />
             </button>
-            <Link href={"/cart"} className="text-gray-700 hover:text-blue-600 relative">
+            <Link
+              href={"/cart"}
+              className="text-gray-700 hover:text-blue-600 relative"
+            >
               <ShoppingCart className="w-6 h-6" />
               <span className="absolute -top-2 -right-2 bg-blue-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                { isLoading ? <Loader2 className="animate-spin"/> : cartCount}
+                {isLoading ? <Loader2 className="animate-spin" /> : cartCount}
               </span>
             </Link>
           </div>
@@ -185,12 +199,13 @@ export default function Navbar() {
               Account
             </button>
 
-            <Link href={"/cart"} className="flex items-center gap-2 text-gray-700 relative">
-                <ShoppingCart className="w-5 h-5" />
-             
+            <Link
+              href={"/cart"}
+              className="flex items-center gap-2 text-gray-700 relative"
+            >
+              <ShoppingCart className="w-5 h-5" />
               Cart
-              
-            </Link >
+            </Link>
           </div>
         </div>
       )}
