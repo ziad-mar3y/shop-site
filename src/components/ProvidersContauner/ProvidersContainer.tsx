@@ -1,6 +1,7 @@
 "use client"
 import CartContextProvider from "@/Contexts/cartContext";
 import { store } from "@/redux/store";
+import { SessionProvider } from "next-auth/react";
 import { ReactNode } from "react";
 import { Provider } from "react-redux";
 
@@ -10,8 +11,11 @@ export default function ProvidersContainer({
   children: ReactNode;
 }) {
   return (
-    <Provider store={store}>
+    <SessionProvider>
+       <Provider store={store}>
       <CartContextProvider>{children}</CartContextProvider>;
     </Provider>
+    </SessionProvider>
+   
   );
 }

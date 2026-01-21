@@ -32,31 +32,31 @@ class ApiServices {
 
   async getProductDetails(id: string): Promise<SingleProductResponse> {
     return await fetch(this.baseUrl + "api/v1/products/" + id).then((res) =>
-      res.json()
+      res.json(),
     );
   }
 
   async getAllCategories(): Promise<CategoryResponse> {
     return await fetch(this.baseUrl + "api/v1/categories").then((res) =>
-      res.json()
+      res.json(),
     );
   }
 
   async getSingleCategory(id: string): Promise<SingleCategoryResponse> {
     return await fetch(this.baseUrl + "api/v1/categories/" + id).then((res) =>
-      res.json()
+      res.json(),
     );
   }
 
   async getAllBrands(): Promise<BrandResponse> {
     return await fetch(this.baseUrl + "api/v1/brands").then((res) =>
-      res.json()
+      res.json(),
     );
   }
 
   async getSingleBrand(id: string): Promise<SingleBrandResponse> {
     return await fetch(this.baseUrl + "api/v1/brands/" + id).then((res) =>
-      res.json()
+      res.json(),
     );
   }
 
@@ -100,7 +100,7 @@ class ApiServices {
 
   async updateCartProductCount(
     productId: string,
-    count: number
+    count: number,
   ): Promise<handleCartCount> {
     return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
@@ -127,8 +127,19 @@ class ApiServices {
         }),
         headers: this.handlHeadrs(),
         method: "post",
-      }
+      },
     ).then((res) => res.json());
+  }
+
+  async login(email: string, password: string) {
+    return await fetch(baseUrl + "api/v1/auth/signin", {
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      headers: this.handlHeadrs(),
+      method: "post",
+    }).then((res) => res.json());
   }
 }
 
