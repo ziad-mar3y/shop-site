@@ -223,8 +223,8 @@ export default function BrandPage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[1 , 2 , 3 , 4].map((i) => (
+          {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {brand.map((brand) => (
               <div
                 key={i}
                 className="bg-white/5 backdrop-blur-sm rounded-2xl p-4 border border-white/10 hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group"
@@ -245,7 +245,7 @@ export default function BrandPage() {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
 

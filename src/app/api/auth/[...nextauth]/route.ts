@@ -1,8 +1,8 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import NextAuth from "next-auth";
+import NextAuth, { type AuthOptions } from "next-auth";
 import { apiServices } from "@/apiServices/apiServices";
 
-const handler = NextAuth({
+export const authOptions: AuthOptions = {
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -48,24 +48,26 @@ const handler = NextAuth({
   pages: {
     signIn: "/auth/login",
   },
-    callbacks:{
-            async session({session, token}){
-                session.user.role = token.role as string;
-                session.token = token.token as string ;
-                return session
-            }   ,
-            async jwt({token , user}){
-                if(user){
-                    token.token = user.token;
-                    token.role = user.role
-                }
-                return token
-            }
+  callbacks: {
+    async session({ session, token }) {
+      session.user.role = token.role as string;
+      session.token = token.token as string;
+      return session;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.token = (user as { token?: string }).token;
+        token.role = (user as { role?: string }).role;
+      }
+      return token;
+    },
+  },
     secret:process.env.AUTH_SECRET,
-    session:{
-        strategy: "jwt"
-    }
-});
+    session: {
+      strategy: "jwt" as const,
+    },
+};
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };

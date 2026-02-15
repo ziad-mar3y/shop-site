@@ -60,58 +60,62 @@ class ApiServices {
     );
   }
 
-  handlHeadrs() {
-    return {
+  handlHeadrs(token?: string | null) {
+    const headers: Record<string, string> = {
       "Content-Type": "application/json",
-      token:
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY2NDMxNTY4LCJleHAiOjE3NzQyMDc1Njh9.qLkJWGsEZJU0jvjPw-WX5Q5zrIpzQPfE_Mu90wrDMAY",
-    };
+     
+      };
+    if (token) {
+      headers.token = token;
+    }
+    return headers;
   }
 
-  async addProductToCart(productId: string): Promise<addToCartResponse> {
+  async addProductToCart(productId: string, token?: string | null): Promise<addToCartResponse> {
     return fetch(this.baseUrl + "api/v1/cart", {
       method: "post",
       body: JSON.stringify({
         productId,
       }),
-      headers: this.handlHeadrs(),
+      headers: this.handlHeadrs(token),
     }).then((res) => res.json());
   }
 
-  async getUserCart(): Promise<getCartResponse> {
+  async getUserCart(token?: string | null): Promise<getCartResponse> {
     return fetch(this.baseUrl + "api/v1/cart", {
-      headers: this.handlHeadrs(),
+      headers: this.handlHeadrs(token),
     }).then((res) => res.json());
   }
 
-  async removeSingleProduct(productId: string): Promise<RemoveProductCart> {
+  async removeSingleProduct(productId: string, token?: string | null): Promise<RemoveProductCart> {
     return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "delete",
-      headers: this.handlHeadrs(),
+      headers: this.handlHeadrs(token),
     }).then((res) => res.json());
   }
 
-  async clearCart(): Promise<RemoveProductCart> {
+  async clearCart(token?: string | null): Promise<RemoveProductCart> {
     return await fetch(this.baseUrl + "api/v1/cart", {
       method: "delete",
-      headers: this.handlHeadrs(),
+      headers: this.handlHeadrs(token),
     }).then((res) => res.json());
   }
 
   async updateCartProductCount(
     productId: string,
     count: number,
+    token?: string | null,
   ): Promise<handleCartCount> {
     return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
       body: JSON.stringify({
         count,
       }),
-      headers: this.handlHeadrs(),
+      headers: this.handlHeadrs(token),
     }).then((res) => res.json());
   }
 
-  async checkOut(cartId: string) {
+  async checkOut(cartId: string, token?: string | null) {
     return fetch(
       this.baseUrl +
         "api/v1/orders/checkout-session/" +
@@ -125,7 +129,7 @@ class ApiServices {
             city: "Cairo",
           },
         }),
-        headers: this.handlHeadrs(),
+        headers: this.handlHeadrs(token),
         method: "post",
       },
     ).then((res) => res.json());
@@ -136,6 +140,20 @@ class ApiServices {
       body: JSON.stringify({
         email,
         password,
+      }),
+      headers: this.handlHeadrs(),
+      method: "post",
+    }).then((res) => res.json());
+  }
+
+  async register(name: string, email: string, password: string, rePassword:string , phone: string) {
+    return await fetch(baseUrl + "api/v1/auth/signup", {
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        rePassword,
+        phone
       }),
       headers: this.handlHeadrs(),
       method: "post",

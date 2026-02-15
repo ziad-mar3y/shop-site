@@ -19,7 +19,10 @@ export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartCount, isLoading } = useContext(cartContext);
-  const { data, status } = useSession();
+  const { data, status } = useSession(); 
+  console.log(data);
+  
+  
 
 
 

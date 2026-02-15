@@ -5,6 +5,7 @@ import CartProduct from "../../../components/product/CartProduct";
 import { Button } from "../../../components/ui";
 import Link from "next/link";
 import { useContext, useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
@@ -15,12 +16,14 @@ interface innerCartProps {
 }
 
 export default function InnerCart({ cartData, key }: innerCartProps) {
+  const { data: session } = useSession();
+  const token = session?.token ?? null;
   const [innerCartData, setInnerCartData] = useState<getCartResponse>(cartData);
   const [isCartRemoed, setIsCartRemoed] = useState(false);
   const [checkOutLoading, setCheckOutLoading] = useState(false);
 
   async function updateCart() {
-    const newCartData = await apiServices.getUserCart();
+    const newCartData = await apiServices.getUserCart(token);
     setInnerCartData(newCartData);
   }
 
@@ -29,7 +32,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     setIsProductRemoving: (vlaue: boolean) => void
   ) {
     setIsProductRemoving(true);
-    const response = await apiServices.removeSingleProduct(productId);
+    const response = await apiServices.removeSingleProduct(productId, token);
     toast.success("product removed successfully");
     setIsProductRemoving(false);
     updateCart();
@@ -37,7 +40,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
 
   async function clearUserCart() {
     setIsCartRemoed(true);
-    const response = await apiServices.clearCart();
+    const response = await apiServices.clearCart(token);
     toast.success("Cart Removed successfully");
     updateCart();
     setIsCartRemoed(false);
@@ -45,7 +48,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
 
   async function handleCheckOut() {
     setCheckOutLoading(true);
-    const response: checkOut = await apiServices.checkOut(cartData.cartId);
+    const response: checkOut = await apiServices.checkOut(cartData.cartId, token);
     setCheckOutLoading(false);
     console.log(response);
     location.href = response.session.url;

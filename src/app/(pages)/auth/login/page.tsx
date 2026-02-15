@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,43 +10,65 @@ import {
   FormField,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { z } from "zod";
+import Link from "next/link";
 
-const formSchema = z.object({
-  email: z.string(),
-  password: z.string(),
+export const formSchema = z.object({
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Invalid email address"),
+
+  password: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password is too long")
+    .regex(/[0-9]/, "Must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Must contain at least one special character"),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export default function Login() {
-  const form = useForm();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/products";
   const [siginingIn, setSiginingIn] = useState(false);
 
-  async function onSubmit(values: any) {
-    setSiginingIn(true)
+  const form = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  async function onSubmit(values: FormValues) {
+    setSiginingIn(true);
+
     try {
       const response = await signIn("credentials", {
         email: values.email,
         password: values.password,
         redirect: false,
       });
+
       if (response?.ok) {
-        router.push(callbackUrl);
+        router.push("/products");
       }
     } catch (error) {
-      alert(JSON.stringify(error));
+      console.error(error);
     }
-    setSiginingIn(false)
+
+    setSiginingIn(false);
   }
 
   return (
-    <div className=" max-w-2xl mx-auto my-12">
+    <div className="max-w-2xl mx-auto my-12">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
@@ -58,24 +80,34 @@ export default function Login() {
                 <FormControl>
                   <Input placeholder="your email" type="email" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
+
           <FormField
             control={form.control}
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>password</FormLabel>
+                <FormLabel>Password</FormLabel>
                 <FormControl>
                   <Input placeholder="*******" type="password" {...field} />
                 </FormControl>
+                <FormMessage />
               </FormItem>
             )}
           />
+          
+         <div className=" flex flex-col-reverse gap-3 ">
+           <Link className="text-blue-600 visited:text-purple-600 w-24" href={"/auth/register"}> sign up</Link>
+
+
           <Button disabled={siginingIn} type="submit">
-            {siginingIn && <Loader2 className="animate-spin"/>}
-            Submit</Button>
+            {siginingIn && <Loader2 className="animate-spin mr-2" />}
+            Submit
+          </Button>
+         </div>
         </form>
       </Form>
     </div>

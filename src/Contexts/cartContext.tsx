@@ -8,6 +8,7 @@ import {
   useEffect,
   useState,
 } from "react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 
 type HandleAddToCart = (
@@ -40,6 +41,8 @@ export default function CartContextProvider({
 }: {
   children: ReactNode;
 }) {
+  const { data: session, status } = useSession();
+  const token = session?.token ?? null;
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -48,29 +51,28 @@ export default function CartContextProvider({
     setAddToCartLoading: React.Dispatch<React.SetStateAction<boolean>>
   ) {
     setAddToCartLoading(true);
-    const data = await apiServices.addProductToCart(productId);
+    const data = await apiServices.addProductToCart(productId, token);
     setCartCount(data.numOfCartItems);
     toast.success(data.message);
     setAddToCartLoading(false);
   }
 
    async function handleUpdateProductCart(productId: string, count: number , updateCart: ()=>Promise<void> ){
-    const response = await apiServices.updateCartProductCount(productId, count);    
+    const response = await apiServices.updateCartProductCount(productId, count, token);
     updateCart();
   }
 
-  
-
   async function GetCart() {
+    if (status === "loading") return;
     setIsLoading(true);
-    const response = await apiServices.getUserCart();
+    const response = await apiServices.getUserCart(token);
     setCartCount(response.numOfCartItems);
     setIsLoading(false);
   }
 
   useEffect(() => {
     GetCart();
-  }, []);
+  }, [status, token]);
 
   return (
     <cartContext.Provider
