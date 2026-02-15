@@ -2,7 +2,17 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import NextAuth, { type AuthOptions } from "next-auth";
 import { apiServices } from "@/apiServices/apiServices";
 
+// NextAuth validates NEXTAUTH_SECRET internally; allow AUTH_SECRET to satisfy it
+if (process.env.AUTH_SECRET && !process.env.NEXTAUTH_SECRET) {
+  process.env.NEXTAUTH_SECRET = process.env.AUTH_SECRET;
+}
+// On Vercel, set NEXTAUTH_URL from VERCEL_URL when not set
+if (process.env.VERCEL_URL && !process.env.NEXTAUTH_URL) {
+  process.env.NEXTAUTH_URL = `https://${process.env.VERCEL_URL}`;
+}
+
 export const authOptions: AuthOptions = {
+  secret: process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
       // The name to display on the sign in form (e.g. "Sign in with...")
@@ -62,12 +72,13 @@ export const authOptions: AuthOptions = {
       return token;
     },
   },
-    secret:process.env.AUTH_SECRET,
-    session: {
+  session: {
       strategy: "jwt" as const,
     },
 };
 
 const handler = NextAuth(authOptions);
 
+// In production, NextAuth requires a secret. If missing, you'll see "server configuration" error.
+// On Vercel: Project → Settings → Environment Variables → add AUTH_SECRET (same value as in .env.local).
 export { handler as GET, handler as POST };
