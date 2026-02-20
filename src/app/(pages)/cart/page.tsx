@@ -1,11 +1,15 @@
 import { apiServices } from "@/apiServices/apiServices";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { redirect } from "next/navigation";
 import InnerCart from "./InnerCart";
 
 export default async function ShopingCart() {
   const session = await getServerSession(authOptions);
-  const token = session?.token ?? null;
+  if (!session?.token) {
+    redirect("/auth/login");
+  }
+  const token = session.token;
 
   async function fetchCart() {
     const response = await apiServices.getUserCart(token);
