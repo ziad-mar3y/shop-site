@@ -50,6 +50,12 @@ export default function CartContextProvider({
     productId: string,
     setAddToCartLoading: React.Dispatch<React.SetStateAction<boolean>>
   ) {
+    // Check if user is authenticated
+    if (!token || status !== "authenticated") {
+      toast.error("Please login to add products to cart");
+      return;
+    }
+    
     setAddToCartLoading(true);
     const data = await apiServices.addProductToCart(productId, token);
     setCartCount(data.numOfCartItems);
@@ -58,6 +64,12 @@ export default function CartContextProvider({
   }
 
    async function handleUpdateProductCart(productId: string, count: number , updateCart: ()=>Promise<void> ){
+    // Check if user is authenticated
+    if (!token || status !== "authenticated") {
+      toast.error("Please login to update cart");
+      return;
+    }
+    
     const response = await apiServices.updateCartProductCount(productId, count, token);
     updateCart();
   }

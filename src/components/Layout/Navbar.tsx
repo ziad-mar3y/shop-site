@@ -80,8 +80,8 @@ export default function Navbar() {
             ) : (status == "authenticated" ? <>
 
               <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Account</span>
+               <Link href={"/profile"}> <User className="h-5 w-5" />
+                <span className="sr-only">Account</span></Link>
               </Button>
 
               {/* Shopping Cart */}

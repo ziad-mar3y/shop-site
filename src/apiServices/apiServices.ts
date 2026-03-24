@@ -12,6 +12,7 @@ import {
   SingleCategoryResponse,
   SingleProductResponse,
 } from "@/types";
+import { Address } from "cluster";
 
 // token =
 //     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5NDA1MzQ5NGEwYzBmMjZhNzM4Yjk5YiIsIm5hbWUiOiJBaG1lZCBBYmQgQWwtTXV0aSIsInJvbGUiOiJ1c2VyIiwiaWF0IjoxNzY1ODIzMzA2LCJleHAiOjE3NzM1OTkzMDZ9.pe0ULr-nVg5GRyFGa5qhsXHQpBniTiYKnl1LfYXGnLk";
@@ -157,6 +158,38 @@ class ApiServices {
       }),
       headers: this.handlHeadrs(),
       method: "post",
+    }).then((res) => res.json());
+  }
+  
+  async getAllSubcategories() {
+    return await fetch(baseUrl + "api/v1/subcategories", {
+      headers: this.handlHeadrs(),
+    }).then((res) => res.json());
+  }
+  async addAddress(name:string, details:string, phone:string, city:string, token?: string) {
+    return await fetch(baseUrl + "api/v1/addresses", {
+      body: JSON.stringify({
+        name,
+        details,
+        phone,
+        city
+      }),
+      headers: this.handlHeadrs(token),
+      method: "post",
+    }).then((res) => res.json());
+  }
+  
+  async getAddresses(token?: string) {
+    return await fetch(baseUrl + "api/v1/addresses", {
+      headers: this.handlHeadrs(token),
+      method: "get",
+    }).then((res) => res.json());
+  }
+  
+  async deleteAddress(id: string, token?: string) {
+    return await fetch(baseUrl + "api/v1/addresses/" + id, {
+      headers: this.handlHeadrs(token),
+      method: "delete",
     }).then((res) => res.json());
   }
 }

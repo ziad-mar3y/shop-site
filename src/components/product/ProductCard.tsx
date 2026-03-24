@@ -13,6 +13,7 @@ import AddToCartButon from "./AddToCartButoon";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
+import HeroCarousel from "../HeroCarousel";
 // import AddToCartButon from "./AddToCartButoon";
 // import { cartContext } from "@/Context/CartContext";
 
@@ -113,7 +114,11 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   }
 
   return (
+    <>
+    {/* <HeroCarousel/> */}
+    
     <div className="group relative flex flex-col justify-between bg-white border rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+     
       {/* Product Image */}
       <div className="p-3">
         <div className="relative aspect-square overflow-hidden">
@@ -196,5 +201,6 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
         />
       </div>
     </div>
+    </>
   );
 }

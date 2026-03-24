@@ -36,8 +36,8 @@ export default function RootLayout({
           <Navbar />
           {children}
           <Footer />
+          <Toaster position="top-right" />
         </ProvidersContainer>
-        <Toaster />
       </body>
     </html>
   );

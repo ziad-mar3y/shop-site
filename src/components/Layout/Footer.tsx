@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import {
   Facebook,
@@ -9,7 +11,6 @@ import {
   MapPin,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 
 const footerSections = [
   {
@@ -23,102 +24,83 @@ const footerSections = [
     ],
   },
   {
-    title: "Customer Service",
+    title: "Support",
     links: [
-      { title: "Contact Us", href: "/contact" },
+      { title: "Contact", href: "/contact" },
       { title: "Help Center", href: "/help" },
-      { title: "Track Your Order", href: "/track" },
-      { title: "Returns & Exchanges", href: "/returns" },
-      { title: "Size Guide", href: "/size-guide" },
+      { title: "Track Order", href: "/track" },
+      { title: "Returns", href: "/returns" },
     ],
   },
   {
-    title: "About",
+    title: "Company",
     links: [
-      { title: "About TechMart", href: "/about" },
+      { title: "About", href: "/about" },
       { title: "Careers", href: "/careers" },
       { title: "Press", href: "/press" },
-      { title: "Investor Relations", href: "/investors" },
-      { title: "Sustainability", href: "/sustainability" },
-    ],
-  },
-  {
-    title: "Policies",
-    links: [
-      { title: "Privacy Policy", href: "/privacy" },
-      { title: "Terms of Service", href: "/terms" },
-      { title: "Cookie Policy", href: "/cookies" },
-      { title: "Shipping Policy", href: "/shipping" },
-      { title: "Refund Policy", href: "/refunds" },
     ],
   },
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "https://facebook.com", label: "Facebook" },
-  { icon: Twitter, href: "https://twitter.com", label: "Twitter" },
-  { icon: Instagram, href: "https://instagram.com", label: "Instagram" },
-  { icon: Youtube, href: "https://youtube.com", label: "YouTube" },
+  { icon: Facebook, href: "#" },
+  { icon: Twitter, href: "#" },
+  { icon: Instagram, href: "#" },
+  { icon: Youtube, href: "#" },
 ];
 
 export function Footer() {
   return (
-    <footer className="bg-muted/30 border-t">
-      <div className="container mx-auto px-4 py-12">
-        {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
-          {/* Company Info */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="h-8 w-8 bg-primary rounded-lg flex items-center justify-center">
-                
-              </div>
-              <span className="font-bold text-xl">Shop</span>
-            </Link>
-            <p className="text-muted-foreground mb-4 max-w-md">
-              Your one-stop destination for the latest technology, fashion, and
-              lifestyle products. Quality guaranteed with fast shipping and
-              excellent customer service.
+    <footer className="relative bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white border-t border-white/10">
+      {/* Glow */}
+      <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/10 to-purple-500/10 blur-3xl" />
+
+      <div className="relative max-w-7xl mx-auto px-4 py-16">
+
+        {/* TOP */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+
+          {/* BRAND */}
+          <div className="lg:col-span-2 space-y-4">
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
+              Shop
+            </h2>
+
+            <p className="text-gray-300 max-w-md">
+              Premium products, fast delivery, and a modern shopping experience designed for you.
             </p>
 
-            {/* Contact Info */}
-            <div className="space-y-2 mb-6">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <MapPin className="h-4 w-4" />
-                <span>123 Tech Street, Digital City, DC 12345</span>
+            {/* CONTACT */}
+            <div className="space-y-2 text-sm text-gray-400">
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4" /> Cairo, Egypt
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+              <div className="flex items-center gap-2">
+                <Phone className="w-4 h-4" /> +20 123 456 789
               </div>
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                <Mail className="h-4 w-4" />
-                <span>support@techmart.com</span>
+              <div className="flex items-center gap-2">
+                <Mail className="w-4 h-4" /> support@shop.com
               </div>
             </div>
 
-            {/* Social Links */}
-            <div className="flex space-x-2">
-              {socialLinks.map((social) => (
-                <Button
-                  key={social.label}
-                  variant="outline"
-                  size="icon"
-                  asChild
+            {/* SOCIAL */}
+            <div className="flex gap-3 pt-2">
+              {socialLinks.map((s, i) => (
+                <Link
+                  key={i}
+                  href={s.href}
+                  className="p-2 rounded-lg bg-white/10 hover:bg-white/20 transition backdrop-blur"
                 >
-                  <Link href={social.href} target="_blank">
-                    <social.icon className="h-4 w-4" />
-                    <span className="sr-only">{social.label}</span>
-                  </Link>
-                </Button>
+                  <s.icon className="w-4 h-4" />
+                </Link>
               ))}
             </div>
           </div>
 
-          {/* Footer Links */}
+          {/* LINKS */}
           {footerSections.map((section) => (
-            <div key={section.title} className="space-y-4">
-              <h3 className="font-semibold text-sm uppercase tracking-wide">
+            <div key={section.title}>
+              <h3 className="text-sm font-semibold mb-4 text-gray-200">
                 {section.title}
               </h3>
               <ul className="space-y-2">
@@ -126,7 +108,7 @@ export function Footer() {
                   <li key={link.title}>
                     <Link
                       href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-sm text-gray-400 hover:text-white transition"
                     >
                       {link.title}
                     </Link>
@@ -136,67 +118,40 @@ export function Footer() {
             </div>
           ))}
         </div>
-        <Separator className="my-8" />
-        {/* Newsletter Signup */}
-        <div>
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div className="text-center md:text-left">
-              <h3 className="font-semibold mb-2">Stay Updated</h3>
-              <p className="text-sm text-muted-foreground">
-                Subscribe to our newsletter for the latest deals and updates.
-              </p>
-            </div>
-            <div className="flex w-full md:w-auto max-w-md space-x-2">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              />
-              <Button type="submit">Subscribe</Button>
-            </div>
+
+        {/* NEWSLETTER */}
+        <div className="mt-16 border-t border-white/10 pt-10 flex flex-col md:flex-row items-center justify-between gap-6">
+
+          <div>
+            <h3 className="text-lg font-semibold">Stay updated</h3>
+            <p className="text-gray-400 text-sm">
+              Get the latest offers and updates
+            </p>
+          </div>
+
+          <div className="flex w-full md:w-auto max-w-md gap-2">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-sm placeholder:text-gray-400 focus:outline-none"
+            />
+            <Button className="bg-indigo-500 hover:bg-indigo-600">
+              Subscribe
+            </Button>
           </div>
         </div>
 
-        <Separator className="my-8" />
+        {/* BOTTOM */}
+        <div className="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-sm text-gray-400 gap-4">
 
-        {/* Bottom Footer */}
-        <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 text-sm text-muted-foreground">
-          <div className="flex flex-col md:flex-row items-center space-y-2 md:space-y-0 md:space-x-4">
-            <p>&copy; 2024 TechMart. All rights reserved.</p>
-            <div className="hidden md:block">•</div>
-            <div className="flex items-center space-x-4">
-              <Link
-                href="/privacy"
-                className="hover:text-foreground transition-colors"
-              >
-                Privacy
-              </Link>
-              <Link
-                href="/terms"
-                className="hover:text-foreground transition-colors"
-              >
-                Terms
-              </Link>
-              <Link
-                href="/cookies"
-                className="hover:text-foreground transition-colors"
-              >
-                Cookies
-              </Link>
-            </div>
+          <p>© 2026 Shop. All rights reserved.</p>
+
+          <div className="flex gap-4">
+            <Link href="/privacy" className="hover:text-white">Privacy</Link>
+            <Link href="/terms" className="hover:text-white">Terms</Link>
+            <Link href="/cookies" className="hover:text-white">Cookies</Link>
           </div>
 
-          <div className="flex items-center space-x-2">
-            <span>Powered by</span>
-            <Link
-              href="https://nextjs.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold hover:text-foreground transition-colors"
-            >
-              Next.js
-            </Link>
-          </div>
         </div>
       </div>
     </footer>
