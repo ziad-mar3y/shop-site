@@ -1,6 +1,6 @@
 "use client";
 import { checkOut, getCartResponse } from "@/interfaces";
-import { ArrowRight, Loader2, ShoppingBag, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, ShoppingBag, Trash2, Truck } from "lucide-react";
 import CartProduct from "../../../components/product/CartProduct";
 import { Button } from "../../../components/ui";
 import Link from "next/link";
@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
+import { CashOnDelivery } from "@/components/Cart";
 
 interface innerCartProps {
   cartData: getCartResponse;
@@ -21,6 +22,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
   const [innerCartData, setInnerCartData] = useState<getCartResponse>(cartData);
   const [isCartRemoed, setIsCartRemoed] = useState(false);
   const [checkOutLoading, setCheckOutLoading] = useState(false);
+  const [showCashOnDelivery, setShowCashOnDelivery] = useState(false);
 
   async function updateCart() {
     const newCartData = await apiServices.getUserCart(token);
@@ -53,6 +55,12 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     console.log(response);
     location.href = response.session.url;
   }
+
+  const handleCashOnDeliverySuccess = () => {
+    // Update cart to reflect the order
+    updateCart();
+    setShowCashOnDelivery(false);
+  };
 
   const { setCartCount, handleUpdateProductCart } = useContext(cartContext);
 
@@ -162,9 +170,32 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                   🎉 Free shipping on orders over $100!
                 </p>
               </div>
+
+              {/* Cash on Delivery Option */}
+              <div className="mt-4">
+                <Button
+                  onClick={() => setShowCashOnDelivery(true)}
+                  variant="outline"
+                  className="w-full border-green-600 text-green-600 hover:bg-green-50"
+                  disabled={innerCartData.data.products.length === 0}
+                >
+                  <Truck size={16} className="mr-2" />
+                  Cash on Delivery Available
+                </Button>
+              </div>
             </div>
           </div>
         </div>
+
+        {/* Cash on Delivery Modal */}
+        {showCashOnDelivery && (
+          <CashOnDelivery
+            cartOrderId={cartData.cartId}
+            token={token}
+            onSuccess={handleCashOnDeliverySuccess}
+            onClose={() => setShowCashOnDelivery(false)}
+          />
+        )}
       </div>
     </>
   );

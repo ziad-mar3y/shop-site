@@ -246,6 +246,131 @@ class ApiServices {
       method: "put",
     }).then((res) => res.json());
   }
+
+  // -------------------------
+  // ORDER METHODS
+  // -------------------------
+
+  async getOrders(token?: string): Promise<any> {
+    return await fetch(baseUrl + "api/v1/orders", {
+      headers: this.handlHeadrs(token),
+      method: "get",
+    }).then((res) => res.json());
+  }
+
+  async cashOnDelivery(cartOrderId: string, shippingAddress: any, token?: string): Promise<any> {
+    try {
+      console.log('Making cash on delivery request:', {
+        url: baseUrl + "api/v1/orders/" + cartOrderId,
+        method: "POST",
+        body: { shippingAddress },
+        token: token ? 'present' : 'missing'
+      });
+
+      const response = await fetch(baseUrl + "api/v1/orders/" + cartOrderId, {
+        body: JSON.stringify({
+          shippingAddress
+        }),
+        headers: this.handlHeadrs(token),
+        method: "post",
+      });
+      
+      console.log('HTTP Response status:', response.status);
+      console.log('HTTP Response headers:', response.headers);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('HTTP Error response:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      
+      const responseData = await response.json();
+      console.log('Parsed API response:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Cash on delivery API error:', error);
+      throw error;
+    }
+  }
+
+  async getUserOrders(userId: string, token?: string): Promise<any> {
+    try {
+      console.log('Getting user orders for userId:', userId);
+      
+      // The endpoint that works is /api/v1/orders (without user parameter)
+      // since the user is authenticated via token, we don't need the user ID
+      console.log('API URL:', baseUrl + "api/v1/orders");
+      
+      const response = await fetch(baseUrl + "api/v1/orders", {
+        headers: this.handlHeadrs(token),
+        method: "get",
+      });
+      
+      console.log('User orders response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('User orders fetch error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      
+      const responseData = await response.json();
+      console.log('User orders response data:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching user orders:', error);
+      
+      // Handle specific MongoDB connection error
+      if (error instanceof Error && error.message.includes('connection') && error.message.includes('mongodb')) {
+        return {
+          status: 'error',
+          message: 'Database connection error. Please try again later.',
+          data: null
+        };
+      }
+      
+      // Handle other errors
+      return {
+        status: 'error',
+        message: error instanceof Error ? error.message : 'Failed to fetch user orders',
+        data: null
+      };
+    }
+  }
+
+  async getOrderById(orderId: string, token?: string): Promise<any> {
+    try {
+      console.log('Getting order by ID:', orderId);
+      console.log('API URL:', baseUrl + "api/v1/orders/" + orderId);
+      
+      const response = await fetch(baseUrl + "api/v1/orders/" + orderId, {
+        headers: this.handlHeadrs(token),
+        method: "get",
+      });
+      
+      console.log('Order response status:', response.status);
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Order fetch error:', errorText);
+        throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+      }
+      
+      const responseData = await response.json();
+      console.log('Order response data:', responseData);
+      return responseData;
+    } catch (error) {
+      console.error('Error fetching order by ID:', error);
+      throw error;
+    }
+  }
+
+  async getUserAddresses(token?: string): Promise<any> {
+    return await fetch(baseUrl + "api/v1/addresses", {
+      headers: this.handlHeadrs(token),
+      method: "get",
+    }).then((res) => res.json());
+  }
 }
 
 export const apiServices = new ApiServices();
