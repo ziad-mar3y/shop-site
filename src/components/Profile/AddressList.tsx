@@ -31,7 +31,7 @@ export default function AddressList({
   }
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 sm:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
       {addresses.map((addr) => {
         const isDeleting = deletingAddressId === addr._id;
         console.log(`📍 Checking ${addr.name} (${addr._id}): isDeleting=${isDeleting}`);

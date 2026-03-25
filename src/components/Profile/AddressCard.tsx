@@ -10,11 +10,11 @@ export default function AddressCard({ address, isDeleting, onDelete }: AddressCa
   console.log(`🗑️ AddressCard: ${address.name} (${address._id}) - isDeleting: ${isDeleting}`);
   
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-5 flex justify-between items-center hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
-      <div>
-        <p className="font-medium text-slate-900">{address.name}</p>
-        <p className="text-sm text-slate-500">{address.details}</p>
-        <p className="text-xs text-slate-400 mt-1">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
+      <div className="flex-1">
+        <p className="font-medium text-slate-900 text-sm sm:text-base">{address.name}</p>
+        <p className="text-sm text-slate-500 mt-1">{address.details}</p>
+        <p className="text-xs text-slate-400 mt-2">
           {address.city} • {address.phone}
         </p>
       </div>
@@ -27,7 +27,7 @@ export default function AddressCard({ address, isDeleting, onDelete }: AddressCa
           }
         }}
         disabled={isDeleting}
-        className={`text-red-500 p-2 rounded-lg transition-all duration-200 ${
+        className={`text-red-500 p-2 rounded-lg transition-all duration-200 self-end sm:self-auto ${
           isDeleting 
             ? 'opacity-40 cursor-not-allowed bg-red-50' 
             : 'hover:text-red-600 hover:bg-red-50'

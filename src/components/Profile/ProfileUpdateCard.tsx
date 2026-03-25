@@ -23,11 +23,11 @@ export default function ProfileUpdateCard({
   onCancel,
 }: ProfileUpdateCardProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
-      <div className="flex items-center justify-between mb-6">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
-            <div className="text-white size-6 flex items-center justify-center">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+            <div className="text-white size-5 sm:size-6 flex items-center justify-center">
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                 <circle cx="12" cy="7" r="4"></circle>
@@ -35,7 +35,7 @@ export default function ProfileUpdateCard({
             </div>
           </div>
           <div>
-            <h2 className="text-xl font-semibold text-slate-900">Profile Information</h2>
+            <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Profile Information</h2>
             <p className="text-sm text-slate-500">Update your personal information</p>
           </div>
         </div>
@@ -45,18 +45,18 @@ export default function ProfileUpdateCard({
             onClick={onEditToggle}
             variant="outline"
             size="sm"
-            className="rounded-lg border-green-200 text-green-600 hover:bg-green-50"
+            className="rounded-lg border-green-200 text-green-600 hover:bg-green-50 w-full sm:w-auto"
           >
             <Edit2 size={16} className="mr-1" />
             Edit
           </Button>
         ) : (
-          <div className="flex gap-2">
+          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
             <Button
               onClick={onCancel}
               variant="outline"
               size="sm"
-              className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-50"
+              className="rounded-lg border-slate-200 text-slate-600 hover:bg-slate-50 flex-1 sm:flex-none"
             >
               <X size={16} className="mr-1" />
               Cancel
@@ -65,7 +65,7 @@ export default function ProfileUpdateCard({
               onClick={onSave}
               disabled={profileLoading}
               size="sm"
-              className="rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+              className="rounded-lg bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 flex-1 sm:flex-none"
             >
               {profileLoading ? (
                 <Loader2 className="animate-spin size-4" />
@@ -78,7 +78,7 @@ export default function ProfileUpdateCard({
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Name Field */}
         <div className="space-y-2">
           <label className="text-sm font-medium text-slate-700">Full Name</label>

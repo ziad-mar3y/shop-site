@@ -21,18 +21,18 @@ export default function PasswordChangeCard({
   onSubmit,
 }: PasswordChangeCardProps) {
   return (
-    <div className="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm">
+    <div className="bg-white border border-slate-200 rounded-2xl p-4 sm:p-6 lg:p-8 shadow-sm">
       <div className="flex items-center gap-3 mb-6">
-        <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
-          <Lock className="text-white size-6" />
+        <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl flex items-center justify-center">
+          <Lock className="text-white size-5 sm:size-6" />
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Change Password</h2>
+          <h2 className="text-lg sm:text-xl font-semibold text-slate-900">Change Password</h2>
           <p className="text-sm text-slate-500">Update your password to keep your account secure</p>
         </div>
       </div>
 
-      <div className="space-y-6">
+      <div className="space-y-4 sm:space-y-6">
         {/* Current Password */}
         <div className="space-y-2 pb-4 border-b border-slate-200">
           <label className="text-sm font-medium text-slate-700">Current Password</label>

@@ -52,7 +52,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
-      <div className="flex min-h-screen">
+      <div className="flex flex-col lg:flex-row min-h-screen">
         <Sidebar 
           user={user} 
           activeSection={activeSection} 
@@ -60,21 +60,21 @@ export default function ProfilePage() {
         />
 
         {/* MAIN CONTENT */}
-        <main className="flex-1 p-10">
-          <div className="max-w-5xl mx-auto space-y-8">
+        <main className="flex-1 p-4 sm:p-6 lg:p-10">
+          <div className="max-w-5xl mx-auto space-y-6 sm:space-y-8">
             {/* HEADER */}
             <div className="animate-in fade-in slide-in-from-bottom-3 duration-500">
-              <h1 className="text-2xl font-semibold text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-semibold text-slate-900">
                 {activeSection === "addresses" ? "Your Addresses" : "Settings"}
               </h1>
-              <p className="text-slate-500 mt-1">
+              <p className="text-slate-500 mt-1 text-sm sm:text-base">
                 Manage your account with ease
               </p>
             </div>
 
             {/* ADDRESSES */}
             {activeSection === "addresses" && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <AddressForm
                   form={form}
                   addAdrressLoading={addAdrressLoading}
@@ -95,7 +95,7 @@ export default function ProfilePage() {
 
             {/* SETTINGS */}
             {activeSection === "settings" && (
-              <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="space-y-4 sm:space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 <ProfileUpdateCard
                   profileForm={profileForm}
                   profileLoading={profileLoading}
