@@ -18,7 +18,7 @@ export default function ProfilePage() {
     showForm,
     activeSection,
     addAdrressLoading,
-    removeAdrressLoading,
+    deletingAddressId,
     passwordForm,
     passwordLoading,
     showPasswords,
@@ -87,7 +87,7 @@ export default function ProfilePage() {
                 <AddressList
                   addresses={addresses}
                   loading={loading}
-                  removeAdrressLoading={removeAdrressLoading}
+                  deletingAddressId={deletingAddressId}
                   onDeleteAddress={deleteAddress}
                 />
               </div>

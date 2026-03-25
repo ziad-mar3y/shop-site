@@ -20,7 +20,7 @@ export function useProfileLogic() {
   const [showForm, setShowForm] = useState(false);
   const [activeSection, setActiveSection] = useState<"addresses" | "settings">("addresses");
   const [addAdrressLoading, setAddAdrressLoading] = useState(false);
-  const [removeAdrressLoading, setRemoveAdrressLoading] = useState(false);
+  const [deletingAddressId, setDeletingAddressId] = useState<string | null>(null);
   const [passwordForm, setPasswordForm] = useState<PasswordForm>({
     currentPassword: "",
     password: "",
@@ -150,22 +150,32 @@ export function useProfileLogic() {
   const deleteAddress = async (id?: string) => {
     if (!id) return;
 
+    console.log(`🔥 Starting delete for address ID: ${id}`);
+    console.log(`🔥 Current deletingAddressId before: ${deletingAddressId}`);
+    
+    setDeletingAddressId(id);
+    console.log(`🔥 Set deletingAddressId to: ${id}`);
+
     try {
-      setRemoveAdrressLoading(true);
       const token = data?.token || (data as any)?.token;
 
       if (!token) {
         toast.error("Please log in again to delete an address.");
+        setDeletingAddressId(null);
+        console.log(`🔥 Reset deletingAddressId to null (no token)`);
         return;
       }
 
       const res = await apiServices.deleteAddress(id, token);
       toast.success("Address deleted successfully!");
-      setRemoveAdrressLoading(false);
+      setDeletingAddressId(null);
+      console.log(`🔥 Reset deletingAddressId to null (success)`);
       setAddresses((prev) => prev.filter((a) => a._id !== id));
     } catch (error) {
       console.error("Error deleting address:", error);
       toast.error("Failed to delete address. Please try again.");
+      setDeletingAddressId(null);
+      console.log(`🔥 Reset deletingAddressId to null (error)`);
     }
   };
 
@@ -282,7 +292,7 @@ export function useProfileLogic() {
     showForm,
     activeSection,
     addAdrressLoading,
-    removeAdrressLoading,
+    deletingAddressId,
     passwordForm,
     passwordLoading,
     showPasswords,

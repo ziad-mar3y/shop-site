@@ -5,16 +5,18 @@ import { Address } from "@/interfaces";
 interface AddressListProps {
   addresses: Address[];
   loading: boolean;
-  removeAdrressLoading: boolean;
+  deletingAddressId: string | null;
   onDeleteAddress: (id?: string) => void;
 }
 
 export default function AddressList({ 
   addresses, 
   loading, 
-  removeAdrressLoading, 
+  deletingAddressId, 
   onDeleteAddress 
 }: AddressListProps) {
+  console.log(`📍 AddressList - deletingAddressId: ${deletingAddressId}`);
+  
   if (loading) {
     return <div className="text-slate-500">Loading...</div>;
   }
@@ -30,14 +32,19 @@ export default function AddressList({
 
   return (
     <div className="grid gap-4">
-      {addresses.map((addr) => (
-        <AddressCard
-          key={addr._id}
-          address={addr}
-          removeAdrressLoading={removeAdrressLoading}
-          onDelete={onDeleteAddress}
-        />
-      ))}
+      {addresses.map((addr) => {
+        const isDeleting = deletingAddressId === addr._id;
+        console.log(`📍 Checking ${addr.name} (${addr._id}): isDeleting=${isDeleting}`);
+        
+        return (
+          <AddressCard
+            key={addr._id}
+            address={addr}
+            isDeleting={isDeleting}
+            onDelete={onDeleteAddress}
+          />
+        );
+      })}
     </div>
   );
 }

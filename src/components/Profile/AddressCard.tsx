@@ -2,11 +2,13 @@ import { Address } from "@/interfaces";
 
 interface AddressCardProps {
   address: Address;
-  removeAdrressLoading: boolean;
+  isDeleting: boolean;
   onDelete: (id?: string) => void;
 }
 
-export default function AddressCard({ address, removeAdrressLoading, onDelete }: AddressCardProps) {
+export default function AddressCard({ address, isDeleting, onDelete }: AddressCardProps) {
+  console.log(`🗑️ AddressCard: ${address.name} (${address._id}) - isDeleting: ${isDeleting}`);
+  
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-5 flex justify-between items-center hover:shadow-md transition-all duration-300 hover:-translate-y-0.5">
       <div>
@@ -18,11 +20,21 @@ export default function AddressCard({ address, removeAdrressLoading, onDelete }:
       </div>
 
       <button
-        onClick={() => onDelete(address._id)}
-        disabled={removeAdrressLoading}
-        className="text-red-500 hover:text-red-600 hover:bg-red-50 p-2 rounded-lg transition"
+        onClick={() => {
+          console.log(`🗑️ Clicked delete for: ${address.name} (${address._id})`);
+          if (!isDeleting) {
+            onDelete(address._id);
+          }
+        }}
+        disabled={isDeleting}
+        className={`text-red-500 p-2 rounded-lg transition-all duration-200 ${
+          isDeleting 
+            ? 'opacity-40 cursor-not-allowed bg-red-50' 
+            : 'hover:text-red-600 hover:bg-red-50'
+        }`}
+        style={{ pointerEvents: isDeleting ? 'none' : 'auto' }}
       >
-        {removeAdrressLoading ? (
+        {isDeleting ? (
           <div className="animate-spin">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
