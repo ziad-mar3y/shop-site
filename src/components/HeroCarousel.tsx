@@ -108,7 +108,7 @@ export default function HeroCarousel() {
 
   return (
     <div
-      className="relative w-full h-[600px] lg:h-[80vh] max-h-[800px] overflow-hidden"
+      className="relative w-full h-[600px] lg:h-[80vh] max-h-[600px] overflow-hidden"
       onMouseEnter={() => setIsHovering(true)}
       onMouseLeave={() => setIsHovering(false)}
       onTouchStart={handleTouchStart}
@@ -150,7 +150,7 @@ export default function HeroCarousel() {
             />
             {/* Green Overlay */}
             <div 
-              className="absolute inset-0 bg-green-900 opacity-70 z-10"
+              className="absolute inset-1 bg-green-900 opacity-100 z-10"
               style={{
                 background: 'linear-gradient(135deg, rgba(14, 227, 92, 0.3) 0%, rgba(5, 211, 81, 0.2) 50%, rgba(14, 132, 57, 0.3) 100%)',
                 animation: i === index ? 'progressiveScale 4s ease-in-out' : 'none'

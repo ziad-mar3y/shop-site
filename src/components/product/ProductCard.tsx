@@ -14,6 +14,8 @@ import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
 import HeroCarousel from "../HeroCarousel";
+import { useSession } from "next-auth/react";
+import { useWishlistContext } from "@/Contexts/wishlistContext";
 // import AddToCartButon from "./AddToCartButoon";
 // import { cartContext } from "@/Context/CartContext";
 
@@ -25,7 +27,44 @@ interface ProductCardProps {
 
 export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [addTocartLoading, setAddToCartLoading] = useState<boolean>(false);
-  const {  handleAddToCart  } = useContext(cartContext);
+  const [wishlistLoading, setWishlistLoading] = useState<boolean>(false);
+  const { handleAddToCart } = useContext(cartContext);
+  const { data: session } = useSession();
+  const { fetchWishlistCount } = useWishlistContext();
+
+  // -------------------------
+  // ADD TO WISHLIST
+  // -------------------------
+  const addToWishlist = async () => {
+    if (!session) {
+      toast.error("Please log in to add items to wishlist");
+      return;
+    }
+
+    try {
+      setWishlistLoading(true);
+      const token = session?.token || (session as any)?.token;
+      
+      if (!token) {
+        toast.error("Please log in again to add items to wishlist");
+        return;
+      }
+
+      const res = await apiServices.addToWishlist(product._id, token);
+      console.log("Add to wishlist response:", res);
+      
+      toast.success("Item added to wishlist!");
+      
+      // Refresh wishlist count
+      fetchWishlistCount();
+      
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+      toast.error("Failed to add item to wishlist");
+    } finally {
+      setWishlistLoading(false);
+    }
+  };
 
 
 
@@ -53,8 +92,17 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
                 {product.title}
               </Link>
             </h3>
-            <Button variant="ghost" size="sm">
-              <Heart className="h-4 w-4" />
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={addToWishlist}
+              disabled={wishlistLoading}
+            >
+              {wishlistLoading ? (
+                <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+              ) : (
+                <Heart className="h-4 w-4" />
+              )}
             </Button>
           </div>
 
@@ -135,8 +183,14 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+            onClick={addToWishlist}
+            disabled={wishlistLoading}
           >
-            <Heart className="h-4 w-4" />
+            {wishlistLoading ? (
+              <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
+            ) : (
+              <Heart className="h-4 w-4" />
+            )}
           </Button>
 
           {/* Badge for sold items */}

@@ -192,6 +192,60 @@ class ApiServices {
       method: "delete",
     }).then((res) => res.json());
   }
+
+  // -------------------------
+  // WISHLIST METHODS
+  // -------------------------
+  
+  async getWishlist(token?: string) {
+    return await fetch(baseUrl + "api/v1/wishlist", {
+      headers: this.handlHeadrs(token),
+      method: "get",
+    }).then((res) => res.json());
+  }
+
+  async addToWishlist(productId: string, token?: string) {
+    return await fetch(baseUrl + "api/v1/wishlist", {
+      body: JSON.stringify({ productId }),
+      headers: this.handlHeadrs(token),
+      method: "post",
+    }).then((res) => res.json());
+  }
+
+  async removeFromWishlist(productId: string, token?: string) {
+    return await fetch(baseUrl + "api/v1/wishlist/" + productId, {
+      headers: this.handlHeadrs(token),
+      method: "delete",
+    }).then((res) => res.json());
+  }
+
+  // -------------------------
+  // USER PROFILE METHODS
+  // -------------------------
+  
+  async changePassword(currentPassword: string, password: string, rePassword: string, token?: string) {
+    return await fetch(baseUrl + "api/v1/users/changeMyPassword", {
+      body: JSON.stringify({
+        currentPassword,
+        password,
+        rePassword
+      }),
+      headers: this.handlHeadrs(token),
+      method: "put",
+    }).then((res) => res.json());
+  }
+
+  async updateProfile(name: string, email: string, phone: string, token?: string) {
+    return await fetch(baseUrl + "api/v1/users/updateMe/", {
+      body: JSON.stringify({
+        name,
+        email,
+        phone
+      }),
+      headers: this.handlHeadrs(token),
+      method: "put",
+    }).then((res) => res.json());
+  }
 }
 
 export const apiServices = new ApiServices();

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ShoppingCart, User, Menu, X, Loader2, LogOut } from "lucide-react";
+import { ShoppingCart, User, Menu, X, Loader2, LogOut, Heart } from "lucide-react";
 import { Button } from "@/components";
 import {
   NavigationMenu,
@@ -14,13 +14,14 @@ import { cn } from "@/lib/utils";
 import React, { useContext,useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { cartContext } from "@/Contexts/cartContext";
+import { useWishlistContext } from "@/Contexts/wishlistContext";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const { cartCount, isLoading } = useContext(cartContext);
+  const { wishlistCount } = useWishlistContext();
   const { data, status } = useSession(); 
-  console.log(data);
   
   
 
@@ -83,6 +84,19 @@ export default function Navbar() {
                <Link href={"/profile"}> <User className="h-5 w-5" />
                 <span className="sr-only">Account</span></Link>
               </Button>
+
+              {/* Wishlist */}
+              <Link href={"/wishlist"}>
+                <Button variant="ghost" size="icon" className="relative">
+                  <Heart className="h-5 w-5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
+                  <span className="sr-only">Wishlist</span>
+                </Button>
+              </Link>
 
               {/* Shopping Cart */}
               <Link href={"/cart"}>
