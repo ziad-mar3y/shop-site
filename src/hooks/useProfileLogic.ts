@@ -134,9 +134,7 @@ export function useProfileLogic() {
         });
         setShowForm(false);
 
-        setTimeout(() => {
-          fetchAddresses();
-        }, 500);
+       
       } else {
         toast.error("Failed to add address. Please check your data and try again.");
       }

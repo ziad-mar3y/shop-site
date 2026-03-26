@@ -15,6 +15,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { cartContext } from "@/Contexts/cartContext";
 import { useWishlistContext } from "@/Contexts/wishlistContext";
+import toast from "react-hot-toast";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -22,31 +23,36 @@ export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const { cartCount, isLoading } = useContext(cartContext);
   const { wishlistCount } = useWishlistContext();
-  const { data, status } = useSession(); 
-  
+  const { data, status } = useSession();
+
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 10);
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  
+
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
-  }, [pathname]); 
-  
+  }, [pathname]);
+
   const navItems = [
     { href: "/products", label: "Products" },
     { href: "/brands", label: "Brands" },
     { href: "/categories", label: "Categories" },
-    { href: "/orders", label: "Orders" },
+    { href: "/orders", label: "Orders", requireAuth: true },
   ];
 
-
+  const handleOrdersClick = (e: React.MouseEvent) => {
+    if (status !== "authenticated") {
+      e.preventDefault();
+      toast.error("You must be logged in to access orders");
+    }
+  };
 
   return (
     <header className={cn(
@@ -54,7 +60,7 @@ export default function Navbar() {
       isScrolled && "bg-background/98 shadow-lg"
     )}>
       <div className="container mx-auto px-3 sm:px-4 lg:px-6">
-        <div className="flex h-14 sm:h-16 items-center justify-between">
+        <div className="flex h-14 sm:h-16 items-center justify-between lg:ml-8 xl:ml-12">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="h-7 w-7 sm:h-8 sm:w-8 bg-primary rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
@@ -66,13 +72,13 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation */}
-          <NavigationMenu className="hidden md:flex">
+          <NavigationMenu className="hidden md:flex lg:ml-8 xl:ml-12 md:ml-2 md:text-xs">
             <NavigationMenuList className="gap-1">
-              {navItems.map((item) => {
+              {navItems.filter(item => !item.requireAuth || status === "authenticated").map((item) => {
                 const isActive = pathname.startsWith(item.href);
                 return (
                   <NavigationMenuItem key={item.href}>
-                    <Link href={item.href}>
+                    <Link href={item.href} onClick={item.requireAuth ? handleOrdersClick : undefined}>
                       <NavigationMenuLink
                         className={cn(
                           "group inline-flex h-9 sm:h-10 w-max items-center justify-center rounded-md px-3 sm:px-4 py-2 text-sm font-medium transition-all duration-200 focus:outline-none disabled:pointer-events-none disabled:opacity-50",
@@ -123,7 +129,7 @@ export default function Navbar() {
                   <span className="sr-only">Shopping cart</span>
                 </Button>
               </Link>
-              <div className="hidden sm:flex gap-2 items-center ms-3">
+              <div className="hidden sm:flex gap-1 items-center ms-3 md:ms-0 lg:ms-2 xl:ms-3">
                 <p className="text-sm text-muted-foreground">Hi {data.user.name?.split(" ")[0]}</p>
                 <Button onClick={()=>signOut()} variant="ghost" size="icon" className="h-9 w-9">
                   <LogOut className="h-4 w-4" />
@@ -163,13 +169,13 @@ export default function Navbar() {
       )}>
         <div className="container mx-auto px-3 sm:px-4 py-4">
           <nav className="flex flex-col space-y-1">
-            {navItems.map((item) => {
+            {navItems.filter(item => !item.requireAuth || status === "authenticated").map((item) => {
               const isActive = pathname.startsWith(item.href);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={item.requireAuth ? (e) => { handleOrdersClick(e); setIsMobileMenuOpen(false); } : () => setIsMobileMenuOpen(false)}
                   className={cn(
                     "flex items-center px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200 touch-manipulation",
                     isActive
@@ -181,28 +187,33 @@ export default function Navbar() {
                 </Link>
               );
             })}
-            
-            {/* Mobile User Actions */}
-            {/* {status === "authenticated" && (
-              <div className="border-t pt-4 mt-4 space-y-2">
-                <div className="flex items-center px-4 py-2 text-sm text-muted-foreground">
-                  <User className="h-4 w-4 mr-2" />
-                  {data.user.name?.split(" ")[0]}
-                </div>
-                <Link
-                  href="/profile"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
-                >
-                  Profile
-                </Link>
-                <Link
+            {status === "authenticated" && (
+              <div className="border-t pt-4 mt-4">
+                {/* <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <User className="h-4 w-4 mr-2" />
+                    {data.user.name?.split(" ")[0]}
+                  </div>
+                  <Link
+                    href="/profile"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
+                  >
+                    Profile
+                  </Link>
+                </div> */}
+                {/* <Link
                   href="/wishlist"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center px-4 py-3 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent transition-all duration-200"
                 >
                   <Heart className="h-4 w-4 mr-2" />
                   Wishlist
+                  {wishlistCount > 0 && (
+                    <span className="ml-auto h-5 w-5 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center font-medium">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
                 <Link
                   href="/cart"
@@ -216,7 +227,7 @@ export default function Navbar() {
                       {cartCount}
                     </span>
                   )}
-                </Link>
+                </Link> */}
                 <button
                   onClick={() => {
                     signOut();
@@ -228,8 +239,7 @@ export default function Navbar() {
                   Sign Out
                 </button>
               </div>
-            )} */}
-            
+            )}
             {status === "unauthenticated" && (
               <div className="border-t pt-4 mt-4">
                 <Link

@@ -135,8 +135,9 @@ export function Footer() {
               placeholder="Enter your email"
               className="flex-1 px-4 py-2 rounded-lg bg-white/10 border border-white/20 text-sm placeholder:text-gray-400 focus:outline-none"
             />
-            <Button className="bg-indigo-500 hover:bg-indigo-600">
-              Subscribe
+            <Button className="bg-indigo-500 hover:bg-indigo-600 px-4 sm:px-6 text-sm sm:text-base whitespace-nowrap">
+              <span className="hidden sm:inline">Subscribe</span>
+              <span className="sm:hidden">Go</span>
             </Button>
           </div>
         </div>

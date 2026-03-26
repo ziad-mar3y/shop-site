@@ -40,7 +40,7 @@ export default function PasswordChangeCard({
             <Input
               type={showPasswords.current ? "text" : "password"}
               placeholder="Enter your current password"
-              value={""}
+              value={passwordForm.currentPassword || ""}
               onChange={(e) => onFormChange({ ...passwordForm, currentPassword: e.target.value })}
               className="pr-10"
             />
@@ -61,7 +61,7 @@ export default function PasswordChangeCard({
             <Input
               type={showPasswords.new ? "text" : "password"}
               placeholder="Enter your new password"
-              value={passwordForm.password}
+              value={passwordForm.password || ""}
               onChange={(e) => onFormChange({ ...passwordForm, password: e.target.value })}
               className="pr-10"
             />

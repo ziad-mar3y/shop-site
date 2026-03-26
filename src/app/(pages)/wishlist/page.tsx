@@ -10,6 +10,9 @@ import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { Heart, ShoppingCart, Trash2, Loader2 } from "lucide-react";
 import { useWishlistContext } from "@/Contexts/wishlistContext";
+import { useContext } from "react";
+import { cartContext } from "@/Contexts/cartContext";
+import AddToCartButon from "@/components/product/AddToCartButoon";
 
 type WishlistItem = {
     _id: string;
@@ -38,7 +41,9 @@ export default function WishlistPage() {
     const router = useRouter();
     const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
     const [loading, setLoading] = useState(true);
+    const [addToCartLoading, setAddToCartLoading] = useState<string | null>(null);
     const { fetchWishlistCount } = useWishlistContext();
+    const { setCartCount } = useContext(cartContext);
 
     // -------------------------
     // AUTHENTICATION PROTECTION
@@ -155,6 +160,7 @@ export default function WishlistPage() {
         }
 
         try {
+            setAddToCartLoading(productId);
             const token = data?.token || (data as any)?.token;
 
             if (!token) {
@@ -166,11 +172,18 @@ export default function WishlistPage() {
             console.log("Add to cart response:", res);
             console.log(res);
 
+            // Update cart count in context
+            if (res && res.numOfCartItems !== undefined) {
+                setCartCount(res.numOfCartItems);
+            }
+
             toast.success("Item added to cart");
 
         } catch (error) {
             console.error("Error adding to cart:", error);
             toast.error("Failed to add item to cart");
+        } finally {
+            setAddToCartLoading(null);
         }
     };
 
@@ -267,7 +280,7 @@ export default function WishlistPage() {
                                     <div className="p-4">
                                         <Link href={`/products/${item._id}`}>
                                             <h3 className="font-semibold text-slate-900 mb-2 line-clamp-2 hover:text-indigo-600 transition-colors">
-                                                {item.title}
+                                                {item.title?.split(' ').slice(0, 3).join(' ')}
                                             </h3>
                                         </Link>
 
@@ -280,14 +293,11 @@ export default function WishlistPage() {
                                                 ${item.price}
                                             </span>
 
-                                            <Button
-                                                onClick={() => addToCart(item._id)}
-                                                size="sm"
-                                                className="rounded-full"
-                                            >
-                                                <ShoppingCart className="size-4 mr-1" />
-                                                Add
-                                            </Button>
+                                          <AddToCartButon 
+                                                productQuantity={item.quantity}
+                                                addTocartLoading={addToCartLoading === item._id}
+                                                handleAddToCart={() => addToCart(item._id)}
+                                            />
                                         </div>
                                     </div>
                                 </div>

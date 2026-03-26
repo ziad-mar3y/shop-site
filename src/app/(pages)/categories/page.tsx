@@ -112,7 +112,7 @@ const CategoriesPage = () => {
 
             {categories.map((category) => (
               <Link
-                href={`/categories/${category._id}`}
+                href={`/products?category=${category.slug}`}
                 key={category._id}
                 className="group"
               >
@@ -159,7 +159,7 @@ const CategoriesPage = () => {
           <div className="space-y-4">
             {categories.map((category) => (
               <Link
-                href={`/categories/${category._id}`}
+                href={`/products?category=${category.slug}`}
                 key={category._id}
                 className="flex items-center gap-4 bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-xl hover:bg-white/10 transition"
               >

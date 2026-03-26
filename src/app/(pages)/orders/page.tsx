@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Package, Calendar, Truck, RefreshCw } from "lucide-react";
@@ -12,12 +13,20 @@ import { OrderHistory } from "@/components/Cart";
 export default function OrdersPage() {
   console.log('=== OrdersPage component mounted ===');
   
-  const { data: session } = useSession();
+  const router = useRouter();
+  const { data: session, status } = useSession();
   const token = session?.token ?? null;
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isMounted, setIsMounted] = useState(false);
+
+  // Redirect non-logged-in users away from orders page
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth/login");
+    }
+  }, [status, router]);
 
   console.log('Initial session:', session);
   console.log('Initial token:', token);
@@ -112,7 +121,8 @@ export default function OrdersPage() {
     });
   };
 
-  if (!isMounted) {
+  // Show loading while checking authentication
+  if (status === "loading" || !isMounted) {
     return (
       <div className="max-w-6xl mx-auto p-6">
         <div className="mb-8">
@@ -124,6 +134,24 @@ export default function OrdersPage() {
         <div className="flex items-center justify-center">
           <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
           <span className="ml-2 text-slate-600">Loading...</span>
+        </div>
+      </div>
+    );
+  }
+
+  // Show access denied message for non-authenticated users
+  if (status === "unauthenticated") {
+    return (
+      <div className="max-w-6xl mx-auto p-6">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-slate-800 mb-2">Access Denied</h1>
+          <p className="text-slate-600">
+            You must be logged in to access this page. Redirecting to login...
+          </p>
+        </div>
+        <div className="flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-slate-400" />
+          <span className="ml-2 text-slate-600">Redirecting to login...</span>
         </div>
       </div>
     );
