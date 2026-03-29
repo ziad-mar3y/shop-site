@@ -115,7 +115,21 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    margin: 0;
+    margin-bottom:0;
+    padding: 0;
+    min-height: 100vh;
+  }
+  html {
+    margin: 0;
+    padding: 0;
+  }
+  #root {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+        background: linear-gradient(to bottom right, #0f172a, #1e1b4b, #312e81);
+
   }
   button {
     @apply cursor-pointer

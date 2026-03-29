@@ -25,8 +25,17 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
   const [showCashOnDelivery, setShowCashOnDelivery] = useState(false);
 
   async function updateCart() {
-    const newCartData = await apiServices.getUserCart(token);
-    setInnerCartData(newCartData);
+    if (!token) {
+      console.log('No token available, skipping cart update');
+      return;
+    }
+    try {
+      const newCartData = await apiServices.getUserCart(token);
+      setInnerCartData(newCartData);
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      toast.error("Failed to update cart data");
+    }
   }
 
   async function handleRemoveItem(
@@ -70,7 +79,7 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto">
+      <div key={key} className="max-w-6xl mx-auto">
         <div className="flex items-center gap-3 mb-8">
           <ShoppingBag className="w-8 h-8 text-slate-700" />
           <h1 className="text-3xl font-bold text-slate-800">Shopping Cart</h1>
@@ -95,13 +104,9 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
                 <CartProduct
                   item={item}
                   handleRemoveItem={handleRemoveItem}
-                  handleUpdateProductCart={() =>
-                    handleUpdateProductCart(
-                      item.product._id,
-                      item.count,
-                      updateCart
-                    )
-                  }
+                  handleUpdateProductCart={async (productId: string, count: number) => {
+                    await handleUpdateProductCart(productId, count, updateCart);
+                  }}
                 />
               ))
             )}

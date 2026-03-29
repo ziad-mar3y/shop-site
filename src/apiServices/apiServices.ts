@@ -83,23 +83,56 @@ class ApiServices {
   }
 
   async getUserCart(token?: string | null): Promise<getCartResponse> {
-    return fetch(this.baseUrl + "api/v1/cart", {
+    const response = await fetch(this.baseUrl + "api/v1/cart", {
       headers: this.handlHeadrs(token),
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async removeSingleProduct(productId: string, token?: string | null): Promise<RemoveProductCart> {
-    return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
+    const response = await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "delete",
       headers: this.handlHeadrs(token),
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async clearCart(token?: string | null): Promise<RemoveProductCart> {
-    return await fetch(this.baseUrl + "api/v1/cart", {
+    const response = await fetch(this.baseUrl + "api/v1/cart", {
       method: "delete",
       headers: this.handlHeadrs(token),
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async updateCartProductCount(
@@ -107,13 +140,24 @@ class ApiServices {
     count: number,
     token?: string | null,
   ): Promise<handleCartCount> {
-    return await fetch(this.baseUrl + "api/v1/cart/" + productId, {
+    const response = await fetch(this.baseUrl + "api/v1/cart/" + productId, {
       method: "put",
       body: JSON.stringify({
         count,
       }),
       headers: this.handlHeadrs(token),
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async checkOut(cartId: string, token?: string | null) {
@@ -121,7 +165,7 @@ class ApiServices {
       this.baseUrl +
         "api/v1/orders/checkout-session/" +
         cartId +
-        "?url=http://localhost:3000",
+        "?url=http://localhost:3000/orders",
       {
         body: JSON.stringify({
           shippingAddress: {
@@ -198,25 +242,58 @@ class ApiServices {
   // -------------------------
   
   async getWishlist(token?: string) {
-    return await fetch(baseUrl + "api/v1/wishlist", {
+    const response = await fetch(baseUrl + "api/v1/wishlist", {
       headers: this.handlHeadrs(token),
       method: "get",
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async addToWishlist(productId: string, token?: string) {
-    return await fetch(baseUrl + "api/v1/wishlist", {
+    const response = await fetch(baseUrl + "api/v1/wishlist", {
       body: JSON.stringify({ productId }),
       headers: this.handlHeadrs(token),
       method: "post",
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   async removeFromWishlist(productId: string, token?: string) {
-    return await fetch(baseUrl + "api/v1/wishlist/" + productId, {
+    const response = await fetch(baseUrl + "api/v1/wishlist/" + productId, {
       headers: this.handlHeadrs(token),
       method: "delete",
-    }).then((res) => res.json());
+    });
+    
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    
+    const contentType = response.headers.get("content-type");
+    if (!contentType || !contentType.includes("application/json")) {
+      throw new Error("Response is not JSON");
+    }
+    
+    return response.json();
   }
 
   // -------------------------

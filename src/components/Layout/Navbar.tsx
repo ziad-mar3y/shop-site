@@ -65,10 +65,10 @@ export default function Navbar() {
           <Link href="/" className="flex items-center space-x-2 group">
             <div className="h-7 w-7 sm:h-8 sm:w-8 bg-primary rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
               <span className="text-primary-foreground font-bold text-sm sm:text-lg">
-                T
+                S
               </span>
             </div>
-            <span className="font-bold text-lg sm:text-xl text-foreground">TechMart</span>
+            <span className="font-bold text-lg sm:text-xl text-foreground">Shop</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -110,11 +110,16 @@ export default function Navbar() {
               <Link href={"/wishlist"}>
                 <Button variant="ghost" size="icon" className="relative h-9 w-9 sm:h-10 sm:w-10">
                   <Heart className="h-4 w-4 sm:h-5 sm:w-5" />
-                  {wishlistCount > 0 && (
+                  {wishlistCount > 0 ? (
                     <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center font-medium">
                       {wishlistCount}
                     </span>
+                  ) : (
+                    <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-primary text-xs text-primary-foreground flex items-center justify-center font-medium">
+                      0
+                    </span>
                   )}
+                  
                   <span className="sr-only">Wishlist</span>
                 </Button>
               </Link>

@@ -1,46 +1,39 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   ShoppingBag,
   Grid3x3,
   List,
   ChevronRight,
 } from "lucide-react";
-import { CategoryResponse } from "@/types";
 import { Category } from "@/interfaces";
 import { LoadingSpinner } from "@/components";
-import { apiServices } from "@/apiServices/apiServices";
 import Image from "next/image";
 import Link from "next/link";
 import HeroCarousel from "@/components/HeroCarousel";
+import { useCategories } from "@/hooks/useCategories";
 
 const CategoriesPage = () => {
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("grid");
+  const { data: categoriesData, isLoading, error } = useCategories();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
-    try {
-      const res: CategoryResponse = await apiServices.getAllCategories();
-      console.log(res);
-      
-      setCategories(res.data);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
         <LoadingSpinner />
       </div>
     );
   }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#0f172a]">
+        <div className="text-red-400">Error loading categories</div>
+      </div>
+    );
+  }
+
+  const categories = categoriesData?.data || [];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0f172a] via-[#1e1b4b] to-[#312e81] text-white">
@@ -112,7 +105,7 @@ const CategoriesPage = () => {
 
             {categories.map((category) => (
               <Link
-                href={`/products?category=${category.slug}`}
+                href={`/products?category=${category._id}`}
                 key={category._id}
                 className="group"
               >
@@ -159,7 +152,7 @@ const CategoriesPage = () => {
           <div className="space-y-4">
             {categories.map((category) => (
               <Link
-                href={`/products?category=${category.slug}`}
+                href={`/products?category=${category._id}`}
                 key={category._id}
                 className="flex items-center gap-4 bg-white/5 backdrop-blur-lg border border-white/10 p-4 rounded-xl hover:bg-white/10 transition"
               >

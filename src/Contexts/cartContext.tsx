@@ -70,16 +70,42 @@ export default function CartContextProvider({
       return;
     }
     
-    const response = await apiServices.updateCartProductCount(productId, count, token);
-    updateCart();
+    try {
+      const response = await apiServices.updateCartProductCount(productId, count, token);
+      toast.success("Cart updated successfully");
+      updateCart();
+    } catch (error) {
+      console.error('Error updating cart:', error);
+      toast.error("Failed to update cart");
+      // Revert the count by calling updateCart to get fresh data
+      updateCart();
+    }
   }
 
   async function GetCart() {
     if (status === "loading") return;
+    if (!token || status === "unauthenticated") {
+      setCartCount(0);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
-    const response = await apiServices.getUserCart(token);
-    setCartCount(response.numOfCartItems);
-    setIsLoading(false);
+    try {
+      const response = await apiServices.getUserCart(token);
+      console.log(response);
+      
+      setCartCount(response.numOfCartItems);
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      // Set cart count to 0 on error to prevent app crash
+      setCartCount(0);
+      // Don't show toast for every error to avoid spamming user
+      if (error instanceof Error && !error.message.includes('500')) {
+        toast.error("Failed to load cart data");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   useEffect(() => {

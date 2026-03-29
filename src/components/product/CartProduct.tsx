@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Button } from "../ui";
 import { formatPrice } from "@/helpers/currenct";
 import { CartProduct as CartProduct1, Product2 } from "@/interfaces";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface cartProductProps {
   item: CartProduct1<Product2>;
@@ -24,6 +24,11 @@ export default function CartProduct({
   const [isProductRemoving, setIsProductRemoving] = useState(false);
   const [productCount, setProductCount] = useState(item.count);
   const [timeOutId, setTimeOutId] = useState<NodeJS.Timeout >()
+
+  // Sync local count with item.count when it changes from parent
+  useEffect(() => {
+    setProductCount(item.count);
+  }, [item.count]);
 
   async function handleUpdatingCount(count: number) {
     setProductCount(count);

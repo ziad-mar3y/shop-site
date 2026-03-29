@@ -30,7 +30,12 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [wishlistLoading, setWishlistLoading] = useState<boolean>(false);
   const { handleAddToCart } = useContext(cartContext);
   const { data: session } = useSession();
-  const { fetchWishlistCount } = useWishlistContext();
+  const { wishlistItems, fetchWishlistCount } = useWishlistContext();
+
+  // Check if product is in wishlist
+  const isInWishlist = wishlistItems.some((item: any) => 
+    item._id === product._id || item.id === product._id
+  );
 
   // -------------------------
   // ADD TO WISHLIST
@@ -101,13 +106,13 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
               {wishlistLoading ? (
                 <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
               ) : (
-                <Heart className="h-4 w-4" />
+                <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
               )}
             </Button>
           </div>
 
           <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
-            {product.description}
+            {product.description.slice(0, 3)}...
           </p>
 
           <div className="flex items-start gap-4 mb-3 xs:flex-col">
@@ -119,7 +124,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </div>
 
             <span className="text-sm text-muted-foreground ">
-              {product.sold} sold
+              {product.sold.toString().slice(0, 3)} sold
             </span>
           </div>
 
@@ -182,14 +187,14 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
           <Button
             variant="ghost"
             size="sm"
-            className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity bg-white/80 hover:bg-white"
+            className="absolute top-2 right-2   group-hover:scale-110 transition-transform bg-white/80 hover:bg-white"
             onClick={addToWishlist}
             disabled={wishlistLoading}
           >
             {wishlistLoading ? (
               <div className="animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full" />
             ) : (
-              <Heart className="h-4 w-4" />
+              <Heart className={`h-4 w-4 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
             )}
           </Button>
 
@@ -241,7 +246,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             {formatPrice(product.price)}
           </span>
           <span className="text-xs text-muted-foreground">
-            {product.sold} sold
+            {product.sold?.toString().slice(0, 3)} sold
           </span>
         </div>
       </div>

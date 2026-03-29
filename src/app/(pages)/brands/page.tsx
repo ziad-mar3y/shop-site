@@ -114,7 +114,7 @@ export default function Brands() {
 
             {filteredBrands.map((brand) => (
               <Link
-                href={`/products?brand=${brand.slug}`}
+                href={`/products?brand=${brand._id}`}
                 key={brand._id}
                 className="group"
               >

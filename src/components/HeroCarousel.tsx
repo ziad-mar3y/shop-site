@@ -67,7 +67,7 @@ export default function HeroCarousel() {
       title: limitWords("Fashion Forward", 4),
       subtitle: limitWords("Style meets comfort", 4),
       description: limitWords("Premium quality fashion essentials", 4),
-      image: "/images/carousel10.jpg",
+      image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30",
       cta: "View Collection",
       ctaLink: "/products"
     }

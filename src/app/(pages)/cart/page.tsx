@@ -12,8 +12,30 @@ export default async function ShopingCart() {
   const token = session.token;
 
   async function fetchCart() {
-    const response = await apiServices.getUserCart(token);
-    return response;
+    try {
+      const response = await apiServices.getUserCart(token);
+      console.log(response);
+      
+      return response;
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      // Return empty cart structure on error to prevent page crash
+      return {
+        status: "fail",
+        message: "Error fetching cart",
+        numOfCartItems: 0,
+        cartId: '',
+        data: {
+          _id: '',
+          cartOwner: '',
+          products: [],
+          createdAt: '',
+          updatedAt: '',
+          __v: 0,
+          totalCartPrice: 0
+        }
+      };
+    }
   }
 
   const response = await fetchCart();
