@@ -36,8 +36,15 @@ export default function Products() {
 
   // Filter products based on URL parameters
   const filteredProducts = products.filter((product: any) => {
-    const matchesCategory = categoryFilter === "all" || product.category?._id === categoryFilter;
-    const matchesBrand = brandFilter === "all" || product.brand?._id === brandFilter;
+    // Add null checks to prevent "Cannot read properties of null" errors
+    if (!product) return false;
+    
+    const categoryId = product.category?._id?.toString() || '';
+    const brandId = product.brand?._id?.toString() || '';
+    
+    const matchesCategory = categoryFilter === "all" || categoryId === categoryFilter;
+    const matchesBrand = brandFilter === "all" || brandId === brandFilter;
+    
     return matchesCategory && matchesBrand;
   });
 

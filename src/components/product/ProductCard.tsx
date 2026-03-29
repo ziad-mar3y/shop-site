@@ -124,7 +124,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             </div>
 
             <span className="text-sm text-muted-foreground ">
-              {product.sold.toString().slice(0, 3)} sold
+              {product.sold?.toString().slice(0, 3) || '0'} sold
             </span>
           </div>
 
@@ -246,7 +246,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             {formatPrice(product.price)}
           </span>
           <span className="text-xs text-muted-foreground">
-            {product.sold?.toString().slice(0, 3)} sold
+            {product.sold?.toString().slice(0, 3) || '0'} sold
           </span>
         </div>
       </div>
