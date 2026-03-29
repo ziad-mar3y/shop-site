@@ -51,12 +51,12 @@ export default function EcommerceLanding() {
             Discover high-quality products designed to match your lifestyle. Minimal, modern, and made for you.
           </p>
 
-          <div className="flex gap-4">
+          <div className="flex gap-4 xs:flex-col xs:gap-2 lg:flex-row lg:gap-4 2xs:flex-col md:flex-row sm:flex-row">
             <Link href="/products">
               <Button size="lg" className="px-8">Shop Now</Button>
             </Link>
             <Link href="/categories">
-              <Button size="lg" variant="outline" className="px-8">Browse Categories</Button>
+              <Button size="lg" variant="outline" className="px-8 ">Browse Categories</Button>
             </Link>
           </div>
 
@@ -75,7 +75,7 @@ export default function EcommerceLanding() {
         >
           <img
             src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
-            className="rounded-3xl shadow-2xl"
+            className="rounded-3xl shadow-2xl "
           />
           <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-lg">
             <p className="text-sm text-gray-500">Starting from</p>
