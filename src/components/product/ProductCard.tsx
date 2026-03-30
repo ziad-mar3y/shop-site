@@ -179,7 +179,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
 
         {/* Title */}
         <h3 className="font-semibold text-sm mb-2 line-clamp-2 hover:text-primary transition-colors">
-          <Link href={`/products/${product.id}`}>{product.title}</Link>
+          <Link href={`/products/${product.id}`}>{product.title.split(' ').slice(0, 3).join(' ')}</Link>
         </h3>
 
         {/* Rating */}
