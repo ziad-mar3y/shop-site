@@ -45,6 +45,7 @@ export default function CartContextProvider({
   const token = session?.token ?? null;
   const [cartCount, setCartCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
+  const [serverErrorCount, setServerErrorCount] = useState(0);
 
   async function handleAddToCart(
     productId: string,
@@ -89,14 +90,27 @@ export default function CartContextProvider({
       setIsLoading(false);
       return;
     }
+    
+    // Circuit breaker: skip requests if server is having issues
+    if (serverErrorCount >= 3) {
+      console.log('Server errors detected, skipping cart request to prevent hammering');
+      setCartCount(0);
+      setIsLoading(false);
+      return;
+    }
+    
     setIsLoading(true);
     try {
       const response = await apiServices.getUserCart(token);
       console.log(response);
       
       setCartCount(response.numOfCartItems);
+      // Reset error count on successful request
+      setServerErrorCount(0);
     } catch (error) {
       console.error('Error fetching cart:', error);
+      // Increment server error count
+      setServerErrorCount(prev => prev + 1);
       // Set cart count to 0 on error to prevent app crash
       setCartCount(0);
       // Don't show toast for every error to avoid spamming user

@@ -19,12 +19,22 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [wishlistCount, setWishlistCount] = useState<number>(0);
   const [wishlistItems, setWishlistItems] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [serverErrorCount, setServerErrorCount] = useState(0);
   const { data: session } = useSession();
 
   const fetchWishlistCount = async () => {
     if (!session) {
       setWishlistCount(0);
       setWishlistItems([]);
+      return;
+    }
+
+    // Circuit breaker: skip requests if server is having issues
+    if (serverErrorCount >= 3) {
+      console.log('Server errors detected, skipping wishlist request to prevent hammering');
+      setWishlistCount(0);
+      setWishlistItems([]);
+      setIsLoading(false);
       return;
     }
 
@@ -52,10 +62,14 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
         setWishlistCount(0);
       }
       setWishlistItems(items);
+      // Reset error count on successful request
+      setServerErrorCount(0);
     } catch (error) {
       console.error("Error fetching wishlist count:", error);
       setWishlistCount(0);
       setWishlistItems([]);
+      // Increment server error count
+      setServerErrorCount(prev => prev + 1);
       // Don't show toast for 500 errors to avoid spamming user during server issues
       if (error instanceof Error && !error.message.includes('500')) {
         toast.error("Failed to load wishlist data");
