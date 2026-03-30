@@ -22,72 +22,59 @@ export function WishlistProvider({ children }: { children: ReactNode }) {
   const [serverErrorCount, setServerErrorCount] = useState(0);
   const { data: session } = useSession();
 
-  const fetchWishlistCount = async () => {
-    if (!session) {
-      setWishlistCount(0);
-      setWishlistItems([]);
-      return;
-    }
+ const fetchWishlistCount = async () => {
+  if (!session) {
+    setWishlistCount(0);
+    setWishlistItems([]);
+    return;
+  }
 
-    // Circuit breaker: skip requests if server is having issues
-    if (serverErrorCount >= 3) {
-      console.log('Server errors detected, skipping wishlist request to prevent hammering');
-      setWishlistCount(0);
-      setWishlistItems([]);
-      setIsLoading(false);
-      return;
-    }
+  if (serverErrorCount >= 3) {
+    console.log("Circuit breaker active");
+    return;
+  }
 
-    try {
-      setIsLoading(true);
-      const token = session?.token || (session as any)?.token;
-      
-      if (!token) {
-        setWishlistCount(0);
-        setWishlistItems([]);
-        return;
-      }
+  const token = (session as any)?.token;
+  if (!token) return;
 
-      const res = await apiServices.getWishlist(token);
-      console.log("Wishlist count response:", res);
-      
-      let items = [];
-      if (res && res.data && Array.isArray(res.data)) {
-        items = res.data;
-        setWishlistCount(res.data.length);
-      } else if (res && Array.isArray(res)) {
-        items = res;
-        setWishlistCount(res.length);
-      } else {
-        setWishlistCount(0);
-      }
-      setWishlistItems(items);
-      // Reset error count on successful request
-      setServerErrorCount(0);
-    } catch (error) {
-      console.error("Error fetching wishlist count:", error);
-      setWishlistCount(0);
-      setWishlistItems([]);
-      // Increment server error count
-      setServerErrorCount(prev => prev + 1);
-      // Don't show toast for 500 errors to avoid spamming user during server issues
-      if (error instanceof Error && !error.message.includes('500')) {
-        toast.error("Failed to load wishlist data");
-      }
-    } finally {
-      setIsLoading(false);
+  setIsLoading(true);
+
+  try {
+    const res = await apiServices.getWishlist(token);
+    console.log(res);
+    
+    const items = Array.isArray(res?.data)
+      ? res.data
+      : Array.isArray(res)
+      ? res
+      : [];
+
+    setWishlistItems(items);
+    setWishlistCount(items.length);
+
+    setServerErrorCount(0);
+  } catch (error: any) {
+    setWishlistItems([]);
+    setWishlistCount(0);
+    setServerErrorCount(prev => prev + 1);
+
+    if (!error?.message?.includes("500")) {
+      toast.error("Failed to load wishlist data");
     }
-  };
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const fetchWishlistItems = async () => {
     await fetchWishlistCount();
   };
 
   useEffect(() => {
-    if (session) {
+    if (session?.token) {
       fetchWishlistCount();
     }
-  }, [session]);
+  }, [session?.token]);
 
   return (
     <WishlistContext.Provider value={{ wishlistCount, wishlistItems, isLoading, fetchWishlistCount, fetchWishlistItems }}>

@@ -8,33 +8,14 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
-import { Heart, ShoppingCart, Trash2, Loader2 } from "lucide-react";
+import { Heart, Trash2, Loader2 } from "lucide-react";
 import { useWishlistContext } from "@/Contexts/wishlistContext";
 import { useContext } from "react";
 import { cartContext } from "@/Contexts/cartContext";
 import AddToCartButon from "@/components/product/AddToCartButoon";
+import { WishlistItem } from "@/types";
+import { error } from "console";
 
-type WishlistItem = {
-    _id: string;
-    id: string;
-    title: string;
-    price: number;
-    images: string[];
-    description?: string;
-    imageCover: string;
-    brand: {
-        _id: string;
-        name: string;
-    };
-    category: {
-        _id: string;
-        name: string;
-    };
-    sold: number;
-    ratingsAverage: number;
-    ratingsQuantity: number;
-    quantity: number;
-};
 
 export default function WishlistPage() {
     const { data, status } = useSession();
@@ -58,49 +39,17 @@ export default function WishlistPage() {
     // -------------------------
     // GET WISHLIST
     // -------------------------
-    const fetchWishlist = async () => {
+    async function fetchWishlist() {
         try {
-            setLoading(true);
-            const token = data?.token || (data as any)?.token;
-
-            if (!token) {
-                console.error("No authentication token found for wishlist");
-                setWishlist([]);
-                return;
-            }
-
-            const res = await apiServices.getWishlist(token);
-            console.log("Wishlist API response:", res);
-
-            if (res && res.data && Array.isArray(res.data)) {
-                // Filter out any items without proper product data
-                const validItems = res.data.filter((item: WishlistItem) =>
-                    item &&
-                    item._id &&
-                    item.title &&
-                    item.price
-                );
-                setWishlist(validItems);
-            } else if (res && Array.isArray(res)) {
-                // Filter out any items without proper product data
-                const validItems = res.filter((item: WishlistItem) =>
-                    item &&
-                    item._id &&
-                    item.title &&
-                    item.price
-                );
-                setWishlist(validItems);
-            } else {
-                console.log("No wishlist data found or unexpected format");
-                setWishlist([]);
-            }
-        } catch (err) {
-            console.error("Error fetching wishlist:", err);
-            setWishlist([]);
+            const response = await apiServices.getWishlist(data?.token || (data as any)?.token);
+            console.log(response);
+            setWishlist(response.data);
+        } catch (error) {
+            console.error("Error fetching wishlist:", error);
         } finally {
             setLoading(false);
         }
-    };
+    }
 
     useEffect(() => {
         if (status === "authenticated") {
