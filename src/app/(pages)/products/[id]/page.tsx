@@ -21,6 +21,7 @@ import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import AddToCartButon from "@/components/product/AddToCartButoon";
 import { cartContext } from "@/Contexts/cartContext";
+import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 
 export default function productDetails() {
   const { id } = useParams();
@@ -31,6 +32,9 @@ export default function productDetails() {
   const [selectedImage, setSelectedImage] = useState(-1);
   const [addTocartLoading, setAddToCartLoading] = useState(false);
   const { setCartCount , handleAddToCart} = useContext(cartContext);
+  const { isInWishlist, wishlistLoading, toggleWishlist } = useWishlistToggle({ 
+    productId: product?._id || '' 
+  });
 
   async function getProductDetails() {
     setIsLoading(true);
@@ -195,8 +199,17 @@ export default function productDetails() {
               handleAddToCart={()=>handleAddToCart(product._id, setAddToCartLoading)}
               productQuantity={product.quantity}
             />
-            <Button variant="outline" size="lg">
-              <Heart className="h-5 w-5" />
+            <Button 
+              variant="outline" 
+              size="lg"
+              onClick={toggleWishlist}
+              disabled={wishlistLoading}
+            >
+              {wishlistLoading ? (
+                <div className="animate-spin h-5 w-5 border-2 border-current border-t-transparent rounded-full" />
+              ) : (
+                <Heart className={`h-5 w-5 ${isInWishlist ? 'fill-red-500 text-red-500' : ''}`} />
+              )}
             </Button>
           </div>
 

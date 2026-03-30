@@ -4,6 +4,7 @@ import { apiServices } from "@/apiServices/apiServices";
 import { LoadingSpinner, ProductCard } from "@/components";
 import HeroCarousel from "@/components/HeroCarousel";
 import { ProductResponse } from "@/types";
+import { Product } from "@/interfaces";
 import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -16,26 +17,27 @@ export default function Products() {
   const categoryFilter = searchParams.get("category") || "all";
   const brandFilter = searchParams.get("brand") || "all";
 
-  const fetchProducts = async () => {
+  const fetchProducts = async (): Promise<ProductResponse> => {
     const data: ProductResponse = await apiServices.getAllProducts();
-
-    return data.data;
+    return data;
   };
 
   const {
-    data: products = [],
+    data: productResponse,
     isLoading,
     error,
     isFetching,
-  } = useQuery({
+  } = useQuery<ProductResponse>({
     queryKey: ["products"],
     queryFn: fetchProducts,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
   });
 
+  const products = productResponse?.data || [];
+
   // Filter products based on URL parameters
-  const filteredProducts = products.filter((product: any) => {
+  const filteredProducts = products.filter((product: Product) => {
     // Add null checks to prevent "Cannot read properties of null" errors
     if (!product) return false;
     

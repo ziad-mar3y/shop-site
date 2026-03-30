@@ -14,8 +14,7 @@ import { apiServices } from "@/apiServices/apiServices";
 import toast from "react-hot-toast";
 import { cartContext } from "@/Contexts/cartContext";
 import HeroCarousel from "../HeroCarousel";
-import { useSession } from "next-auth/react";
-import { useWishlistContext } from "@/Contexts/wishlistContext";
+import { useWishlistToggle } from "@/hooks/useWishlistToggle";
 // import AddToCartButon from "./AddToCartButoon";
 // import { cartContext } from "@/Context/CartContext";
 
@@ -27,49 +26,10 @@ interface ProductCardProps {
 
 export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
   const [addTocartLoading, setAddToCartLoading] = useState<boolean>(false);
-  const [wishlistLoading, setWishlistLoading] = useState<boolean>(false);
   const { handleAddToCart } = useContext(cartContext);
-  const { data: session } = useSession();
-  const { wishlistItems, fetchWishlistCount } = useWishlistContext();
-
-  // Check if product is in wishlist
-  const isInWishlist = wishlistItems.some((item: any) => 
-    item._id === product._id || item.id === product._id
-  );
-
-  // -------------------------
-  // ADD TO WISHLIST
-  // -------------------------
-  const addToWishlist = async () => {
-    if (!session) {
-      toast.error("Please log in to add items to wishlist");
-      return;
-    }
-
-    try {
-      setWishlistLoading(true);
-      const token = session?.token || (session as any)?.token;
-      
-      if (!token) {
-        toast.error("Please log in again to add items to wishlist");
-        return;
-      }
-
-      const res = await apiServices.addToWishlist(product._id, token);
-      console.log("Add to wishlist response:", res);
-      
-      toast.success("Item added to wishlist!");
-      
-      // Refresh wishlist count
-      fetchWishlistCount();
-      
-    } catch (error) {
-      console.error("Error adding to wishlist:", error);
-      toast.error("Failed to add item to wishlist");
-    } finally {
-      setWishlistLoading(false);
-    }
-  };
+  const { isInWishlist, wishlistLoading, toggleWishlist } = useWishlistToggle({ 
+    productId: product._id 
+  });
 
 
 
@@ -100,7 +60,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             <Button 
               variant="ghost" 
               size="sm"
-              onClick={addToWishlist}
+              onClick={toggleWishlist}
               disabled={wishlistLoading}
             >
               {wishlistLoading ? (
@@ -188,7 +148,7 @@ export function ProductCard({ product, viewMode = "grid" }: ProductCardProps) {
             variant="ghost"
             size="sm"
             className="absolute top-2 right-2   group-hover:scale-110 transition-transform bg-white/80 hover:bg-white"
-            onClick={addToWishlist}
+            onClick={toggleWishlist}
             disabled={wishlistLoading}
           >
             {wishlistLoading ? (

@@ -42,10 +42,21 @@ export default function InnerCart({ cartData, key }: innerCartProps) {
     productId: string,
     setIsProductRemoving: (vlaue: boolean) => void
   ) {
-    setIsProductRemoving(true);
+    // setIsProductRemoving(true);
+    
+    // Remove from local state immediately for instant UI feedback
+    setInnerCartData((prev) => ({
+      ...prev,
+      data: {
+        ...prev.data,
+        products: prev.data.products.filter((item) => item.product._id !== productId)
+      },
+      numOfCartItems: prev.numOfCartItems - 1
+    }));
+    
     const response = await apiServices.removeSingleProduct(productId, token);
     toast.success("product removed successfully");
-    setIsProductRemoving(false);
+    // setIsProductRemoving(false);
     updateCart();
   }
 
