@@ -34,7 +34,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div id="root"  className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col">
           <ProvidersContainer>
             <QueryProvider>
               <CartContextProvider>
@@ -44,7 +44,7 @@ export default function RootLayout({
                     {children}
                   </main>
                   <Footer />
-                  <Toaster position="top-right" />
+                  <Toaster position="bottom-right" />
                 </WishlistProvider>
               </CartContextProvider>
             </QueryProvider>
